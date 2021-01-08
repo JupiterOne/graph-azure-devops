@@ -35,19 +35,26 @@ https://github.com/JupiterOne/sdk/blob/master/docs/integrations/development.md
 
 The following entities are created:
 
-| Resources | Entity `_type` | Entity `_class` |
-| --------- | -------------- | --------------- |
-| Account   | `acme_account` | `Account`       |
+| Resources            | Entity `_type`           | Entity `_class` |
+| -------------------- | ------------------------ | --------------- |
+| ADO Project          | `azure_devops_project`   | `Project`       |
+| ADO Team             | `azure_devops_team`      | `UserGroup`     |
+| ADO User             | `azure_devops_user`      | `User`          |
+| ADO WorkItem         | `azure_devops_work_item` | `Record`        |
+| Azure Devops Account | `azure_devops_account`   | `Account`       |
 
 ### Relationships
 
 The following relationships are created/mapped:
 
-| Source Entity `_type` | Relationship `_class` | Target Entity `_type` |
-| --------------------- | --------------------- | --------------------- |
-| `acme_account`        | **HAS**               | `acme_user`           |
-| `acme_account`        | **HAS**               | `acme_group`          |
-| `acme_group`          | **HAS**               | `acme_user`           |
+| Source Entity `_type`  | Relationship `_class` | Target Entity `_type`    |
+| ---------------------- | --------------------- | ------------------------ |
+| `azure_devops_account` | **HAS**               | `azure_devops_project`   |
+| `azure_devops_account` | **HAS**               | `azure_devops_team`      |
+| `azure_devops_account` | **HAS**               | `azure_devops_user`      |
+| `azure_devops_project` | **HAS**               | `azure_devops_team`      |
+| `azure_devops_project` | **HAS**               | `azure_devops_work_item` |
+| `azure_devops_team`    | **HAS**               | `azure_devops_user`      |
 
 <!--
 ********************************************************************************

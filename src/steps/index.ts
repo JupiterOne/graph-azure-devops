@@ -1,6 +1,15 @@
 import { accountSteps } from './account';
-import { accessSteps } from './access';
+import { projectSteps } from './projects';
+import { userSteps } from './users';
+import { teamSteps } from './teams';
+import { workitemSteps } from './workitems';
 
-const integrationSteps = [...accountSteps, ...accessSteps];
+const integrationSteps = [
+  ...accountSteps,
+  ...projectSteps,
+  ...userSteps,
+  ...teamSteps,
+  ...workitemSteps,
+];
 
 export { integrationSteps };

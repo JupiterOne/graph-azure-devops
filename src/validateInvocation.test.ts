@@ -1,5 +1,5 @@
 import {
-  IntegrationProviderAuthenticationError,
+  //IntegrationProviderAuthenticationError,
   IntegrationValidationError,
 } from '@jupiterone/integration-sdk-core';
 import {
@@ -7,12 +7,12 @@ import {
   setupRecording,
 } from '@jupiterone/integration-sdk-testing';
 
-import { IntegrationConfig } from './types';
+import { ADOIntegrationConfig } from './types';
 import validateInvocation from './validateInvocation';
 
 it('requires valid config', async () => {
-  const executionContext = createMockExecutionContext<IntegrationConfig>({
-    instanceConfig: {} as IntegrationConfig,
+  const executionContext = createMockExecutionContext<ADOIntegrationConfig>({
+    instanceConfig: {} as ADOIntegrationConfig,
   });
 
   try {
@@ -34,14 +34,14 @@ it('auth error', async () => {
 
   const executionContext = createMockExecutionContext({
     instanceConfig: {
-      clientId: 'INVALID',
-      clientSecret: 'INVALID',
+      orgUrl: 'INVALID',
+      accessToken: 'INVALID',
     },
   });
 
   try {
     await validateInvocation(executionContext);
   } catch (e) {
-    expect(e instanceof IntegrationProviderAuthenticationError).toBe(true);
+    expect(e instanceof IntegrationValidationError).toBe(true);
   }
 });
