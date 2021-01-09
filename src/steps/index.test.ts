@@ -123,7 +123,7 @@ test('should collect data', async () => {
   const projects = context.jobState.collectedEntities.filter((e) =>
     e._class.includes('Project'),
   );
-  //expect(projects.length).toBeGreaterThan(0);
+  expect(projects.length).toBeGreaterThan(0);
   expect(projects).toMatchGraphObjectSchema({
     _class: ['Project'],
     schema: {

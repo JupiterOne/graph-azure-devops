@@ -5,8 +5,6 @@ import { IntegrationInstanceConfig } from '@jupiterone/integration-sdk-core';
  * same properties defined by `instanceConfigFields`.
  */
 export interface ADOIntegrationConfig extends IntegrationInstanceConfig {
-  // clientId: string; // not used
-  // clientSecret: string; // not used
   /**
    * The provider API client ID used to authenticate requests.
    */
