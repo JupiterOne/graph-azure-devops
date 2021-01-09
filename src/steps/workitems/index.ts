@@ -17,6 +17,7 @@ export async function fetchWorkitems({
   const apiClient = createAPIClient(instance.config);
 
   await apiClient.iterateWorkitems(async (item) => {
+    const fields = item.fields || {};
     const workItemEntity = await jobState.addEntity(
       createIntegrationEntity({
         entityData: {
@@ -25,30 +26,30 @@ export async function fetchWorkitems({
             _type: 'azure_devops_work_item',
             _class: 'Record',
             _key: (item.projectId || '') + item.id?.toString(),
-            name: (item.fields || {})['System.Title'],
-            displayName: (item.fields || {})['System.Title'],
-            type: (item.fields || {})['System.WorkItemType'],
+            name: fields['System.Title'],
+            displayName: fields['System.Title'],
+            type: fields['System.WorkItemType'],
             webLink: item.url,
-            workItemType: (item.fields || {})['System.WorkItemType'],
-            description: (item.fields || {})['System.Description'],
+            workItemType: fields['System.WorkItemType'],
+            description: fields['System.Description'],
             projectId: item.projectId,
-            projectName: (item.fields || {})['System.TeamProject'],
-            teamProject: (item.fields || {})['System.TeamProject'],
+            projectName: fields['System.TeamProject'],
+            teamProject: fields['System.TeamProject'],
             revision: item.rev,
-            areaPath: (item.fields || {})['System.AreaPath'],
-            interationPath: (item.fields || {})['System.IterationPath'],
-            state: (item.fields || {})['System.State'],
-            reason: (item.fields || {})['System.Reason'],
-            createdDate: (item.fields || {})['System.CreatedDate'],
-            createdBy: (item.fields || {})['System.CreatedBy'],
-            changedDate: (item.fields || {})['System.ChangedDate'],
-            changedBy: (item.fields || {})['System.ChangedBy'],
-            commentCount: (item.fields || {})['System.CommentCount'],
-            stateChangeDate: (item.fields || {})[
+            areaPath: fields['System.AreaPath'],
+            interationPath: fields['System.IterationPath'],
+            state: fields['System.State'],
+            reason: fields['System.Reason'],
+            createdDate: fields['System.CreatedDate'],
+            createdBy: fields['System.CreatedBy'],
+            changedDate: fields['System.ChangedDate'],
+            changedBy: fields['System.ChangedBy'],
+            commentCount: fields['System.CommentCount'],
+            stateChangeDate: fields[
               'Microsoft.VSTS.Common.StateChangeDate'
             ],
-            priority: (item.fields || {})['Microsoft.VSTS.Common.Priority'],
-            history: (item.fields || {})['System.History'],
+            priority: fields['Microsoft.VSTS.Common.Priority'],
+            history: fields['System.History'],
           },
         },
       }),

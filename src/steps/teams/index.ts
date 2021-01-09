@@ -7,7 +7,6 @@ import {
   RelationshipClass,
   IntegrationMissingKeyError,
 } from '@jupiterone/integration-sdk-core';
-//import { ResultGroupType } from 'azure-devops-node-api/interfaces/TestInterfaces';
 
 import { createAPIClient } from '../../client';
 import { ADOIntegrationConfig } from '../../types';

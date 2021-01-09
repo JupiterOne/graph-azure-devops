@@ -5,15 +5,14 @@ import {
   IntegrationStep,
   IntegrationStepExecutionContext,
   RelationshipClass,
-  //IntegrationMissingKeyError,
 } from '@jupiterone/integration-sdk-core';
-//import { ResultGroupType } from 'azure-devops-node-api/interfaces/TestInterfaces';
 
 import { createAPIClient } from '../../client';
 import { ADOIntegrationConfig } from '../../types';
 import { AZURE_DEVOPS_ACCOUNT } from '../account';
 
 export async function fetchUsers({
+  logger,
   instance,
   jobState,
 }: IntegrationStepExecutionContext<ADOIntegrationConfig>) {
@@ -24,6 +23,10 @@ export async function fetchUsers({
   )) as Entity;
 
   await apiClient.iterateUsers(async (user) => {
+    if (!user.identity?.id) {
+      logger.info('Skipping user resource where user.identity is undefined');
+      return;
+    }
     const userEntity = await jobState.addEntity(
       createIntegrationEntity({
         entityData: {

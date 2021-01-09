@@ -9,7 +9,6 @@ import {
   WebApiTeam,
 } from 'azure-devops-node-api/interfaces/CoreInterfaces';
 import { TeamMember } from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
-//import { WorkItemTrackingProcessApi } from 'azure-devops-node-api/WorkItemTrackingProcessApi';
 import { WorkItem } from 'azure-devops-node-api/interfaces/WorkItemTrackingInterfaces';
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
@@ -23,19 +22,6 @@ interface ADOGroup extends WebApiTeam {
 interface ADOWorkItem extends WorkItem {
   projectId?: string;
 }
-
-// Those can be useful to a degree, but often they're just full of optional
-// values. Understanding the response data may be more reliably accomplished by
-// reviewing the API response recordings produced by testing the wrapper client
-// (below). However, when there are no types provided, it is necessary to define
-// opaque types for each resource, to communicate the records that are expected
-// to come from an endpoint and are provided to iterating functions.
-
-/*
-import { Opaque } from 'type-fest';
-export type AcmeUser = Opaque<any, 'AcmeUser'>;
-export type AcmeGroup = Opaque<any, 'AcmeGroup'>;
-*/
 
 /**
  * An APIClient maintains authentication state and provides an interface to
@@ -58,11 +44,11 @@ export class APIClient {
         this.config.accessToken,
       );
       const connection = new azdev.WebApi(this.config.orgUrl, authHandler);
-      await connection.getCoreApi(); //the authen will fail on this line is accessToken is bad
+      await connection.getCoreApi(); //the authen will fail on this line if accessToken is bad
     } catch (err) {
       throw new IntegrationProviderAuthenticationError({
         cause: err,
-        endpoint: 'ADO API', //'https://localhost/api/v1/some/endpoint?limit=1',
+        endpoint: 'ADO WebApi.getCoreApi',
         status: err.status,
         statusText: err.statusText,
       });
@@ -89,7 +75,7 @@ export class APIClient {
     } catch (err) {
       throw new IntegrationProviderAuthenticationError({
         cause: err,
-        endpoint: 'ADO API', //'https://localhost/api/v1/some/endpoint?limit=1',
+        endpoint: 'ADO WebApi.getCoreApi.getProjects',
         status: err.status,
         statusText: err.statusText,
       });
@@ -118,13 +104,14 @@ export class APIClient {
       const core: cr.ICoreApi = await connection.getCoreApi();
       const allTeams = await core.getAllTeams();
       for (const team of allTeams) {
-        if (team.projectId != undefined && team.id != undefined) {
+        if (team.projectId && team.id) {
           const teamMembers = await core.getTeamMembersWithExtendedProperties(
             team.projectId,
             team.id,
           );
           for (const teamMember of teamMembers) {
             if (
+              teamMember.identity?.id &&
               !users
                 .map((x) => x.identity?.id)
                 .includes(teamMember.identity?.id)
@@ -137,7 +124,7 @@ export class APIClient {
     } catch (err) {
       throw new IntegrationProviderAuthenticationError({
         cause: err,
-        endpoint: 'ADO API', //'https://localhost/api/v1/some/endpoint?limit=1',
+        endpoint: 'ADO WebApi.getCoreApi.getAllTeams', 
         status: err.status,
         statusText: err.statusText,
       });
@@ -166,7 +153,7 @@ export class APIClient {
       const core: cr.ICoreApi = await connection.getCoreApi();
       const allTeams = await core.getAllTeams();
       for (const team of allTeams) {
-        if (team.projectId != undefined && team.id != undefined) {
+        if (team.projectId && team.id) {
           const group: ADOGroup = team;
           group.users = [];
           const teamMembers = await core.getTeamMembersWithExtendedProperties(
@@ -174,7 +161,7 @@ export class APIClient {
             team.id,
           );
           for (const teamMember of teamMembers) {
-            if (teamMember.identity?.id != undefined) {
+            if (teamMember.identity?.id !== undefined) {
               const userId = { id: teamMember.identity?.id };
               group.users.push(userId);
             }
@@ -185,7 +172,7 @@ export class APIClient {
     } catch (err) {
       throw new IntegrationProviderAuthenticationError({
         cause: err,
-        endpoint: 'ADO API', //'https://localhost/api/v1/some/endpoint?limit=1',
+        endpoint: 'ADO WebApi.getCoreApi.getAllTeams',
         status: err.status,
         statusText: err.statusText,
       });
@@ -223,7 +210,7 @@ export class APIClient {
             undefined,
             true,
           );
-          if (workItemsPerProject.values != undefined) {
+          if (workItemsPerProject.values) {
             for (const workitem of workItemsPerProject.values) {
               const adoWorkItem: ADOWorkItem = workitem;
               adoWorkItem.projectId = project.id;
@@ -235,7 +222,7 @@ export class APIClient {
     } catch (err) {
       throw new IntegrationProviderAuthenticationError({
         cause: err,
-        endpoint: 'ADO API', //'https://localhost/api/v1/some/endpoint?limit=1',
+        endpoint: 'ADO WebApi.getCoreApi.getProjects', 
         status: err.status,
         statusText: err.statusText,
       });
