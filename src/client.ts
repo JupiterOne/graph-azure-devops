@@ -3,7 +3,6 @@ import { IntegrationProviderAuthenticationError } from '@jupiterone/integration-
 import { ADOIntegrationConfig } from './types';
 
 import * as azdev from 'azure-devops-node-api';
-import * as cr from 'azure-devops-node-api/CoreApi';
 import {
   TeamProjectReference,
   WebApiTeam,
@@ -39,20 +38,8 @@ export class APIClient {
     // authentication works with the provided credentials, throw an err if
     // authentication fails
 
-    try {
-      const authHandler = azdev.getPersonalAccessTokenHandler(
-        this.config.accessToken,
-      );
-      const connection = new azdev.WebApi(this.config.orgUrl, authHandler);
-      await connection.getCoreApi(); //the authen will fail on this line if accessToken is bad
-    } catch (err) {
-      throw new IntegrationProviderAuthenticationError({
-        cause: err,
-        endpoint: 'ADO WebApi.getCoreApi',
-        status: err.status,
-        statusText: err.statusText,
-      });
-    }
+    const connection = getConnection(this.config.accessToken, this.config.orgUrl);
+    await getCoreApi(connection); //the authen will fail on this line if accessToken is bad and throw an err
   }
 
   /**
@@ -63,24 +50,10 @@ export class APIClient {
   public async iterateProjects(
     iteratee: ResourceIteratee<TeamProjectReference>,
   ): Promise<void> {
-    let projects: TeamProjectReference[] = [];
 
-    try {
-      const authHandler = azdev.getPersonalAccessTokenHandler(
-        this.config.accessToken,
-      );
-      const connection = new azdev.WebApi(this.config.orgUrl, authHandler);
-      const core: cr.ICoreApi = await connection.getCoreApi();
-      projects = await core.getProjects();
-    } catch (err) {
-      throw new IntegrationProviderAuthenticationError({
-        cause: err,
-        endpoint: 'ADO WebApi.getCoreApi.getProjects',
-        status: err.status,
-        statusText: err.statusText,
-      });
-    }
-
+    const connection = getConnection(this.config.accessToken, this.config.orgUrl);
+    const core = await getCoreApi(connection);
+    const projects = await getProjects(core);
     for (const proj of projects) {
       await iteratee(proj);
     }
@@ -94,40 +67,31 @@ export class APIClient {
   public async iterateUsers(
     iteratee: ResourceIteratee<TeamMember>,
   ): Promise<void> {
-    const users: TeamMember[] = [];
 
-    try {
-      const authHandler = azdev.getPersonalAccessTokenHandler(
-        this.config.accessToken,
-      );
-      const connection = new azdev.WebApi(this.config.orgUrl, authHandler);
-      const core: cr.ICoreApi = await connection.getCoreApi();
-      const allTeams = await core.getAllTeams();
-      for (const team of allTeams) {
-        if (team.projectId && team.id) {
-          const teamMembers = await core.getTeamMembersWithExtendedProperties(
-            team.projectId,
-            team.id,
-          );
-          for (const teamMember of teamMembers) {
-            if (
-              teamMember.identity?.id &&
-              !users
-                .map((x) => x.identity?.id)
-                .includes(teamMember.identity?.id)
-            ) {
-              users.push(teamMember);
-            }
+    const users: TeamMember[] = [];
+    const connection = getConnection(this.config.accessToken, this.config.orgUrl);
+    const core = await getCoreApi(connection);
+    const allTeams: WebApiTeam[] = await getAllTeams(core);
+
+    //for every team, get all the users and make a list of uniques
+    for (const team of allTeams) {
+      if (team.projectId && team.id) {
+        const teamMembers = await getTeamMembers(
+          core,
+          team.projectId,
+          team.id,
+        );
+        for (const teamMember of teamMembers) {
+          if (
+            teamMember.identity?.id &&
+            !users
+              .map((x) => x.identity?.id)
+              .includes(teamMember.identity?.id)
+          ) {
+            users.push(teamMember);
           }
         }
       }
-    } catch (err) {
-      throw new IntegrationProviderAuthenticationError({
-        cause: err,
-        endpoint: 'ADO WebApi.getCoreApi.getAllTeams', 
-        status: err.status,
-        statusText: err.statusText,
-      });
     }
 
     for (const user of users) {
@@ -145,37 +109,28 @@ export class APIClient {
   ): Promise<void> {
     const groups: ADOGroup[] = [];
 
-    try {
-      const authHandler = azdev.getPersonalAccessTokenHandler(
-        this.config.accessToken,
-      );
-      const connection = new azdev.WebApi(this.config.orgUrl, authHandler);
-      const core: cr.ICoreApi = await connection.getCoreApi();
-      const allTeams = await core.getAllTeams();
-      for (const team of allTeams) {
-        if (team.projectId && team.id) {
-          const group: ADOGroup = team;
-          group.users = [];
-          const teamMembers = await core.getTeamMembersWithExtendedProperties(
-            team.projectId,
-            team.id,
-          );
-          for (const teamMember of teamMembers) {
-            if (teamMember.identity?.id !== undefined) {
-              const userId = { id: teamMember.identity?.id };
-              group.users.push(userId);
-            }
+    const connection = getConnection(this.config.accessToken, this.config.orgUrl);
+    const core = await getCoreApi(connection);
+    const allTeams: WebApiTeam[] = await getAllTeams(core);
+
+    //for every team, put all the team member ids in array users
+    for (const team of allTeams) {
+      if (team.projectId && team.id) {
+        const group: ADOGroup = team;
+        group.users = [];
+        const teamMembers = await getTeamMembers(
+          core,
+          team.projectId,
+          team.id,
+        );
+        for (const teamMember of teamMembers) {
+          if (teamMember.identity?.id !== undefined) {
+            const userId = { id: teamMember.identity?.id };
+            group.users.push(userId);
           }
-          groups.push(group);
         }
+        groups.push(group);
       }
-    } catch (err) {
-      throw new IntegrationProviderAuthenticationError({
-        cause: err,
-        endpoint: 'ADO WebApi.getCoreApi.getAllTeams',
-        status: err.status,
-        statusText: err.statusText,
-      });
     }
 
     for (const group of groups) {
@@ -187,15 +142,12 @@ export class APIClient {
     iteratee: ResourceIteratee<ADOWorkItem>,
   ): Promise<void> {
     const workitems: ADOWorkItem[] = [];
-    let projects: TeamProjectReference[] = [];
 
-    try {
-      const authHandler = azdev.getPersonalAccessTokenHandler(
-        this.config.accessToken,
-      );
-      const connection = new azdev.WebApi(this.config.orgUrl, authHandler);
-      const core: cr.ICoreApi = await connection.getCoreApi();
-      projects = await core.getProjects();
+    const connection = getConnection(this.config.accessToken, this.config.orgUrl);
+    const core = await getCoreApi(connection);
+    const projects: TeamProjectReference[] = await getProjects(core);
+
+    try { //for every project, get the latest version of each workitem
       const witracker = await connection.getWorkItemTrackingApi();
       for (const project of projects) {
         if (project.id != undefined) {
@@ -222,7 +174,7 @@ export class APIClient {
     } catch (err) {
       throw new IntegrationProviderAuthenticationError({
         cause: err,
-        endpoint: 'ADO WebApi.getCoreApi.getProjects', 
+        endpoint: 'ADO WebApi.getWorkItemTrackingApi.readReportingRevisionsGet', 
         status: err.status,
         statusText: err.statusText,
       });
@@ -236,4 +188,73 @@ export class APIClient {
 
 export function createAPIClient(config: ADOIntegrationConfig): APIClient {
   return new APIClient(config);
+}
+
+function getConnection(accessToken: string, orgUrl: string) {
+  try {
+    const authHandler = azdev.getPersonalAccessTokenHandler(
+      accessToken,
+    );
+    return new azdev.WebApi(orgUrl, authHandler);
+  } catch (err) {
+    throw new IntegrationProviderAuthenticationError({
+      cause: err,
+      endpoint: 'ADO WebApi',
+      status: err.status,
+      statusText: err.statusText,
+    });
+  }
+}
+
+async function getCoreApi(connection) {
+  try {
+    return await connection.getCoreApi();
+  } catch (err)
+  {
+    throw new IntegrationProviderAuthenticationError({
+      cause: err,
+      endpoint: 'ADO WebApi.getCoreApi',
+      status: err.status,
+      statusText: err.statusText,
+    });
+  }
+}
+
+async function getProjects(core) {
+  try {
+    return await core.getProjects();
+  } catch (err) {
+    throw new IntegrationProviderAuthenticationError({
+      cause: err,
+      endpoint: 'ADO WebApi.getCoreApi.getProjects',
+      status: err.status,
+      statusText: err.statusText,
+    });
+  }
+}
+
+async function getAllTeams(core) {
+  try {
+    return await core.getAllTeams();
+  } catch (err) {
+    throw new IntegrationProviderAuthenticationError({
+      cause: err,
+      endpoint: 'ADO WebApi.getCoreApi.getAllTeams',
+      status: err.status,
+      statusText: err.statusText,
+    });
+  }
+}
+
+async function getTeamMembers(core, projectId, teamId) {
+  try { 
+    return await core.getTeamMembersWithExtendedProperties(projectId, teamId);
+  } catch (err) {
+    throw new IntegrationProviderAuthenticationError({
+      cause: err,
+      endpoint: 'ADO WebApi.getCoreApi.getTeamMembersWithExtendedProperties', 
+      status: err.status,
+      statusText: err.statusText,
+    });
+  }
 }
