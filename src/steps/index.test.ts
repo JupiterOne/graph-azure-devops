@@ -1,27 +1,49 @@
-import { createMockStepExecutionContext } from '@jupiterone/integration-sdk-testing';
+import {
+  createMockStepExecutionContext,
+  Recording,
+} from '@jupiterone/integration-sdk-testing';
 
-import { IntegrationConfig } from '../types';
-import { fetchGroups, fetchUsers } from './access';
+import { setupADORecording } from '../../test/recording';
+import { ADOIntegrationConfig } from '../types';
+import { fetchProjects } from './projects';
+import { fetchWorkitems } from './workitems';
+import { fetchTeams } from './teams';
+import { fetchUsers } from './users';
 import { fetchAccountDetails } from './account';
 
-const DEFAULT_CLIENT_ID = 'dummy-acme-client-id';
-const DEFAULT_CLIENT_SECRET = 'dummy-acme-client-secret';
+const DEFAULT_ORG_URL = 'https://dev.azure.com/tkcasey1';
+const DEFAULT_ACCESS_TOKEN = 'topsecret123'; //fake secret because we have a recording
 
-const integrationConfig: IntegrationConfig = {
-  clientId: process.env.CLIENT_ID || DEFAULT_CLIENT_ID,
-  clientSecret: process.env.CLIENT_SECRET || DEFAULT_CLIENT_SECRET,
+const integrationConfig: ADOIntegrationConfig = {
+  orgUrl: process.env.ORG_URL || DEFAULT_ORG_URL,
+  accessToken: process.env.ACCESS_TOKEN || DEFAULT_ACCESS_TOKEN,
 };
 
+jest.setTimeout(1000 * 60 * 1);
+
+let recording: Recording;
+
+afterEach(async () => {
+  await recording.stop();
+});
+
 test('should collect data', async () => {
-  const context = createMockStepExecutionContext<IntegrationConfig>({
+  recording = setupADORecording({
+    directory: __dirname,
+    name: 'steps',
+  });
+
+  const context = createMockStepExecutionContext<ADOIntegrationConfig>({
     instanceConfig: integrationConfig,
   });
 
   // Simulates dependency graph execution.
   // See https://github.com/JupiterOne/sdk/issues/262.
   await fetchAccountDetails(context);
+  await fetchProjects(context);
+  await fetchWorkitems(context);
   await fetchUsers(context);
-  await fetchGroups(context);
+  await fetchTeams(context);
 
   // Review snapshot, failure is a regression
   expect({
@@ -39,16 +61,14 @@ test('should collect data', async () => {
   expect(accounts).toMatchGraphObjectSchema({
     _class: ['Account'],
     schema: {
-      additionalProperties: false,
+      additionalProperties: true,
       properties: {
-        _type: { const: 'acme_account' },
-        manager: { type: 'string' },
-        _rawData: {
-          type: 'array',
-          items: { type: 'object' },
-        },
+        _type: { const: 'azure_devops_account' },
+        _key: { type: 'string' },
+        name: { type: 'string' },
+        displayName: { type: 'string' },
       },
-      required: ['manager'],
+      required: ['name'],
     },
   });
 
@@ -59,16 +79,20 @@ test('should collect data', async () => {
   expect(users).toMatchGraphObjectSchema({
     _class: ['User'],
     schema: {
-      additionalProperties: false,
+      additionalProperties: true,
       properties: {
-        _type: { const: 'acme_user' },
-        firstName: { type: 'string' },
+        _type: { const: 'azure_devops_user' },
+        _key: { type: 'string' },
+        name: { type: 'string' },
+        displayName: { type: 'string' },
+        email: { type: 'string' },
+        webLink: { type: 'string' },
         _rawData: {
           type: 'array',
           items: { type: 'object' },
         },
       },
-      required: ['firstName'],
+      required: ['name'],
     },
   });
 
@@ -79,20 +103,66 @@ test('should collect data', async () => {
   expect(userGroups).toMatchGraphObjectSchema({
     _class: ['UserGroup'],
     schema: {
-      additionalProperties: false,
+      additionalProperties: true,
       properties: {
-        _type: { const: 'acme_group' },
-        logoLink: {
-          type: 'string',
-          // Validate that the `logoLink` property has a URL format
-          format: 'url',
-        },
+        _type: { const: 'azure_devops_team' },
+        _key: { type: 'string' },
+        name: { type: 'string' },
+        displayName: { type: 'string' },
+        webLink: { type: 'string' },
+        projectName: { type: 'string' },
         _rawData: {
           type: 'array',
           items: { type: 'object' },
         },
       },
-      required: ['logoLink'],
+      required: ['name'],
+    },
+  });
+
+  const projects = context.jobState.collectedEntities.filter((e) =>
+    e._class.includes('Project'),
+  );
+  expect(projects.length).toBeGreaterThan(0);
+  expect(projects).toMatchGraphObjectSchema({
+    _class: ['Project'],
+    schema: {
+      additionalProperties: true,
+      properties: {
+        _type: { const: 'azure_devops_project' },
+        _key: { type: 'string' },
+        name: { type: 'string' },
+        displayName: { type: 'string' },
+        webLink: { type: 'string' },
+        _rawData: {
+          type: 'array',
+          items: { type: 'object' },
+        },
+      },
+      required: ['name'],
+    },
+  });
+
+  const workitems = context.jobState.collectedEntities.filter((e) =>
+    e._class.includes('Record'),
+  );
+  //expect(workitems.length).toBeGreaterThan(0);
+  expect(workitems).toMatchGraphObjectSchema({
+    _class: ['Record'],
+    schema: {
+      additionalProperties: true,
+      properties: {
+        _type: { const: 'azure_devops_work_item' },
+        _key: { type: 'string' },
+        name: { type: 'string' },
+        displayName: { type: 'string' },
+        webLink: { type: 'string' },
+        _rawData: {
+          type: 'array',
+          items: { type: 'object' },
+        },
+      },
+      required: ['name'],
     },
   });
 });
