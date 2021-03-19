@@ -57,7 +57,7 @@ test('should collect data', async () => {
   const accounts = context.jobState.collectedEntities.filter((e) =>
     e._class.includes('Account'),
   );
-  expect(accounts.length).toBeGreaterThan(0);
+  expect(accounts.length).toBe(1);
   expect(accounts).toMatchGraphObjectSchema({
     _class: ['Account'],
     schema: {
@@ -146,7 +146,7 @@ test('should collect data', async () => {
   const workitems = context.jobState.collectedEntities.filter((e) =>
     e._class.includes('Record'),
   );
-  //expect(workitems.length).toBeGreaterThan(0);
+  expect(workitems.length).toBeGreaterThan(0);
   expect(workitems).toMatchGraphObjectSchema({
     _class: ['Record'],
     schema: {
