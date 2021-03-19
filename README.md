@@ -31,16 +31,29 @@ Create a `.env` file at the root of this project and add environment variables
 to match what is in `src/instanceConfigFields.ts`. The `.env` file is ignored by
 git, so you won't have to worry about accidentally pushing credentials.
 
+`orgUrl` is https://dev.azure.com/ + your Azure Boards organization name (ex:
+"jupiterone").
+
+You can generate a personal access token at this link:
+{{`orgUrl`}}/\_usersSettings/tokens
+
+Be sure to give `Read` access for:
+
+- `Work Items` - Neded for `azure_devops_work_item` entities
+- `Project and Team` - Needed for `azure_devops_project`, `azure_devops_team`,
+  and `azure_devops_user`
+
 Given this example configuration:
 
 ```typescript
 import { IntegrationInstanceConfigFieldMap } from '@jupiterone/integration-sdk-core';
 
 const instanceConfigFields: IntegrationInstanceConfigFieldMap = {
-  clientId: {
+  orgUrl: {
     type: 'string',
+    mask: false,
   },
-  clientSecret: {
+  accessToken: {
     type: 'string',
     mask: true,
   },
@@ -52,8 +65,8 @@ export default instanceConfigFields;
 You would provide a `.env` file like this:
 
 ```bash
-CLIENT_ID="client-id"
-CLIENT_SECRET="supersecret"
+ORG_URL="https://dev.azure.com/jupiterone"
+ACCESS_TOKEN="abcdefghijklmnopqrstuvwxyz1234567890"
 ```
 
 The snake cased environment variables will automatically be converted and

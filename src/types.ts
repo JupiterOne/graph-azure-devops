@@ -6,12 +6,14 @@ import { IntegrationInstanceConfig } from '@jupiterone/integration-sdk-core';
  */
 export interface ADOIntegrationConfig extends IntegrationInstanceConfig {
   /**
-   * The provider API client ID used to authenticate requests.
+   * https://dev.azure.com/ + an Azure Boards organization name (ex: "https://dev.azure.com/jupiterone")
    */
   orgUrl: string;
 
   /**
    * The personal access token used to authenticate requests.
+   * Can be generated at {{`orgUrl`}}/_usersSettings/tokens.
+   * Requires `Read` permissions for `Work Items` and `Project and Team`
    */
   accessToken: string;
 }
