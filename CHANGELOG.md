@@ -8,6 +8,12 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 1.0.1 - 3-19-21
+
+### Updated
+
+- `README.md` with build status badges
+
 ## 1.0.0 - 3-19-21
 
 ### Added

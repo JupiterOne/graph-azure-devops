@@ -1,4 +1,7 @@
-# JupiterOne Integration
+# Graph Azure Devops
+
+[![Build Status](https://github.com/JupiterOne/graph-azure-devops/workflows/Build/badge.svg)](https://github.com/JupiterOne/graph-azure-devops/actions?query=workflow%3ABuild)
+[![Gitleaks Status](https://github.com/JupiterOne/graph-azure-devops/workflows/gitleaks/badge.svg)](https://github.com/JupiterOne/graph-azure-devopsactions?query=workflow%3Agitleaks)
 
 ## Development Environment
 
