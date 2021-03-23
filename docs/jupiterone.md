@@ -35,6 +35,8 @@ The following relationships are created/mapped:
 | `azure_devops_project` | **HAS**               | `azure_devops_team`      |
 | `azure_devops_project` | **HAS**               | `azure_devops_work_item` |
 | `azure_devops_team`    | **HAS**               | `azure_devops_user`      |
+| `azure_devops_user`    | **ASSIGNED**          | `azure_devops_work_item` |
+| `azure_devops_user`    | **CREATED**           | `azure_devops_work_item` |
 
 <!--
 ********************************************************************************

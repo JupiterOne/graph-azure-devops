@@ -3,10 +3,10 @@ import {
   Recording,
 } from '@jupiterone/integration-sdk-testing';
 
-import { setupADORecording } from '../../test/recording';
+import { setupAzureRecording } from '../../test/recording';
 import { ADOIntegrationConfig } from '../types';
 import { fetchProjects } from './projects';
-import { fetchWorkitems } from './workitems';
+import { fetchWorkItems } from './workitems';
 import { fetchTeams } from './teams';
 import { fetchUsers } from './users';
 import { fetchAccountDetails } from './account';
@@ -28,9 +28,9 @@ afterEach(async () => {
 });
 
 test('should collect data', async () => {
-  recording = setupADORecording({
+  recording = setupAzureRecording({
     directory: __dirname,
-    name: 'steps',
+    name: 'fullIntegrationTest',
   });
 
   const context = createMockStepExecutionContext<ADOIntegrationConfig>({
@@ -41,9 +41,9 @@ test('should collect data', async () => {
   // See https://github.com/JupiterOne/sdk/issues/262.
   await fetchAccountDetails(context);
   await fetchProjects(context);
-  await fetchWorkitems(context);
   await fetchUsers(context);
   await fetchTeams(context);
+  await fetchWorkItems(context);
 
   // Review snapshot, failure is a regression
   expect({
