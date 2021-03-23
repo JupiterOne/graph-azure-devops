@@ -20,6 +20,12 @@ and this project adheres to
 
 - test recording infrastructure
 
+- `descriptor` and `emailDomain` properties to `azure_devops_user` entities
+
+### Removed
+
+- `description` property on `azure_devops_user` entities
+
 ## 1.0.1 - 3-19-21
 
 ### Updated

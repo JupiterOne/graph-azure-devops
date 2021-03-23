@@ -5,6 +5,7 @@ import {
   IntegrationStepExecutionContext,
   RelationshipClass,
   IntegrationMissingKeyError,
+  Entity,
 } from '@jupiterone/integration-sdk-core';
 
 import { createAPIClient } from '../../client';
@@ -64,16 +65,16 @@ export async function fetchWorkItems({
       }),
     );
 
-    let createdByUserEntity;
+    let createdByUserEntity: Entity | undefined;
     if (createdBy) {
       const createdByUserId =
         emailToIdMap.get(createdBy) ??
-        (await jobState.getData(
+        (await jobState.getData<string>(
           UNIQUE_NAME_TO_USER_ID_MAPPING_PREFIX + createdBy,
         ));
-      if (typeof createdByUserId === 'string') {
+      if (createdByUserId) {
         emailToIdMap.set(createdBy, createdByUserId);
-        createdByUserEntity = await jobState.findEntity(createdByUserId);
+        createdByUserEntity = (await jobState.findEntity(createdByUserId))!;
         await jobState.addRelationship(
           createDirectRelationship({
             _class: RelationshipClass.CREATED,
@@ -89,18 +90,18 @@ export async function fetchWorkItems({
     }
 
     if (assignedTo) {
-      let assignedToUserEntity;
+      let assignedToUserEntity: Entity | undefined;
       if (assignedTo === createdBy) {
         assignedToUserEntity = createdByUserEntity;
       } else {
         const assignedToUserId =
           emailToIdMap.get(assignedTo) ??
-          (await jobState.getData(
+          (await jobState.getData<string>(
             UNIQUE_NAME_TO_USER_ID_MAPPING_PREFIX + assignedTo,
           ));
-        if (typeof assignedToUserId === 'string') {
+        if (assignedToUserId) {
           emailToIdMap.set(assignedTo, assignedToUserId);
-          createdByUserEntity = await jobState.findEntity(assignedToUserId);
+          createdByUserEntity = (await jobState.findEntity(assignedToUserId))!;
         } else {
           logger.info(
             `User who is assigned ticket ${item.id?.toString()} does not exist: ${assignedTo}`,
