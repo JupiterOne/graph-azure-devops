@@ -7,6 +7,7 @@ import {
 import { fetchWorkItems } from '.';
 import { config } from '../../../test/config';
 import { setupAzureRecording } from '../../../test/recording';
+import { getMatchRequestsBy } from '../../../test/getMatchRequestsBy';
 import { testEntities } from '../../../test/testEntities';
 import { testRelationships } from '../../../test/testRelationships';
 import { toArray } from '../../../test/toArray';
@@ -58,6 +59,9 @@ describe('fetchWorkItems', () => {
     recording = setupAzureRecording({
       directory: __dirname,
       name: 'fetchWorkItems',
+      options: {
+        matchRequestsBy: getMatchRequestsBy({ config: config }),
+      },
     });
 
     const context = await setupFetchWorkItemsContext();

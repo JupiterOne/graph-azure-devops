@@ -18,7 +18,7 @@ and this project adheres to
   `azure_devops_work_item` -`azure_devops_user` **CREATED**
   `azure_devops_work_item`
 
-- testing recording infrastructure
+- test recording infrastructure
 
 ## 1.0.1 - 3-19-21
 

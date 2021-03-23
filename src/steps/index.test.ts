@@ -4,20 +4,14 @@ import {
 } from '@jupiterone/integration-sdk-testing';
 
 import { setupAzureRecording } from '../../test/recording';
+import { config } from '../../test/config';
+import { getMatchRequestsBy } from '../../test/getMatchRequestsBy';
 import { ADOIntegrationConfig } from '../types';
 import { fetchProjects } from './projects';
 import { fetchWorkItems } from './workitems';
 import { fetchTeams } from './teams';
 import { fetchUsers } from './users';
 import { fetchAccountDetails } from './account';
-
-const DEFAULT_ORG_URL = 'https://dev.azure.com/tkcasey1';
-const DEFAULT_ACCESS_TOKEN = 'topsecret123'; //fake secret because we have a recording
-
-const integrationConfig: ADOIntegrationConfig = {
-  orgUrl: process.env.ORG_URL || DEFAULT_ORG_URL,
-  accessToken: process.env.ACCESS_TOKEN || DEFAULT_ACCESS_TOKEN,
-};
 
 jest.setTimeout(1000 * 60 * 1);
 
@@ -31,10 +25,13 @@ test('should collect data', async () => {
   recording = setupAzureRecording({
     directory: __dirname,
     name: 'fullIntegrationTest',
+    options: {
+      matchRequestsBy: getMatchRequestsBy({ config: config }),
+    },
   });
 
   const context = createMockStepExecutionContext<ADOIntegrationConfig>({
-    instanceConfig: integrationConfig,
+    instanceConfig: config,
   });
 
   // Simulates dependency graph execution.

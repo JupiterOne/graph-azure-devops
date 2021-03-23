@@ -1,4 +1,5 @@
 import { gunzipSync } from 'zlib';
+import { last } from 'lodash';
 
 import {
   Recording,
@@ -6,6 +7,7 @@ import {
   setupRecording,
   SetupRecordingInput,
 } from '@jupiterone/integration-sdk-testing';
+import { config, DEFAULT_ORG_NAME } from './config';
 
 export { Recording };
 
@@ -23,6 +25,12 @@ function mutateRecordingEntry(entry: RecordingEntry): void {
   if (!responseText) {
     return;
   }
+
+  // Set orgUrl property to the default for matching in ci
+  entry.request.url = entry.request.url.replace(
+    last(config.orgUrl.split('/')),
+    DEFAULT_ORG_NAME,
+  );
 
   const contentEncoding = entry.response.headers.find(
     (e) => e.name === 'content-encoding',
@@ -57,11 +65,26 @@ function mutateRecordingEntry(entry: RecordingEntry): void {
 
   keysToRedactMap.set('emailAddress', 'redacted@email.com');
   keysToRedactMap.set('userPrincipalName', DEFAULT_REDACT);
+  /**
+   * Because of the way the Azure DevOps sdk inexplicably makes an api call to get the urls for other api calls,
+   * I need to crawl the responses of api calls to replace the .env configured url with the DEFAULT_ORG_NAME in
+   * order to get matching to work in ci
+   */
+  keysToRedactMap.set('locationUrl', (val) =>
+    val.replace(last(config.orgUrl.split('/')), DEFAULT_ORG_NAME),
+  );
+  keysToRedactMap.set('url', (val) =>
+    val.replace(last(config.orgUrl.split('/')), DEFAULT_ORG_NAME),
+  );
 
   if (responseJson?.value?.forEach) {
     responseJson.value.forEach((responseValue, index) => {
-      keysToRedactMap.forEach((redactionValue, keyToRedact) => {
+      keysToRedactMap.forEach((redaction, keyToRedact) => {
         if (responseValue[keyToRedact]) {
+          const redactionValue =
+            typeof redaction === 'function'
+              ? redaction(responseValue[keyToRedact])
+              : redaction;
           responseJson.value[index][keyToRedact] = redactionValue;
         }
       });

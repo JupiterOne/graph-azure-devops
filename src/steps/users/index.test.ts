@@ -6,6 +6,7 @@ import {
 import { fetchUsers } from '.';
 import { config } from '../../../test/config';
 import { setupAzureRecording } from '../../../test/recording';
+import { getMatchRequestsBy } from '../../../test/getMatchRequestsBy';
 import { testEntities } from '../../../test/testEntities';
 import { testRelationships } from '../../../test/testRelationships';
 import { toArray } from '../../../test/toArray';
@@ -48,6 +49,9 @@ describe('fetchUsers', () => {
     recording = setupAzureRecording({
       directory: __dirname,
       name: 'fetchUsers',
+      options: {
+        matchRequestsBy: getMatchRequestsBy({ config: config }),
+      },
     });
 
     const context = await setupFetchUsersContext();
