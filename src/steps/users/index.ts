@@ -11,6 +11,8 @@ import { createAPIClient } from '../../client';
 import { ADOIntegrationConfig } from '../../types';
 import { AZURE_DEVOPS_ACCOUNT } from '../account';
 
+export const UNIQUE_NAME_TO_USER_ID_MAPPING_PREFIX = 'UserUniqueName:';
+
 export async function fetchUsers({
   logger,
   instance,
@@ -38,15 +40,21 @@ export async function fetchUsers({
             name: user.identity?.displayName,
             displayName: user.identity?.displayName,
             email: user.identity?.uniqueName,
+            emailDomain: user.identity?.uniqueName?.split('@').pop(),
             username: user.identity?.uniqueName,
             webLink: user.identity?.url,
             imageLink: user.identity?.imageUrl,
-            description: user.identity?.descriptor,
+            descriptor: user.identity?.descriptor,
             profileLink: user.identity?.profileUrl,
           },
         },
       }),
     );
+
+    // Need to be able to look up the userId based on the user's email due to the way that work items are linked to users.
+    const key =
+      UNIQUE_NAME_TO_USER_ID_MAPPING_PREFIX + user.identity?.uniqueName;
+    await jobState.setData(key, user.identity?.id);
 
     await jobState.addRelationship(
       createDirectRelationship({

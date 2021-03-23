@@ -8,6 +8,24 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 1.0.2 - 3-23-21
+
+### Added
+
+- Support for ingesting the following **new** resources
+
+- New relationships -`azure_devops_user` **ASSIGNED**
+  `azure_devops_work_item` -`azure_devops_user` **CREATED**
+  `azure_devops_work_item`
+
+- test recording infrastructure
+
+- `descriptor` and `emailDomain` properties to `azure_devops_user` entities
+
+### Removed
+
+- `description` property on `azure_devops_user` entities
+
 ## 1.0.1 - 3-19-21
 
 ### Updated

@@ -5,19 +5,32 @@ import {
   IntegrationStepExecutionContext,
   RelationshipClass,
   IntegrationMissingKeyError,
+  Entity,
 } from '@jupiterone/integration-sdk-core';
 
 import { createAPIClient } from '../../client';
 import { ADOIntegrationConfig } from '../../types';
+import { UNIQUE_NAME_TO_USER_ID_MAPPING_PREFIX } from '../users';
 
-export async function fetchWorkitems({
+function extractEmail(
+  lifecycleIdentifier: string | undefined,
+): string | undefined {
+  return (lifecycleIdentifier?.match(/<(.*?)>/) ?? [])[0]?.slice(1, -1);
+}
+
+export async function fetchWorkItems({
   instance,
   jobState,
+  logger,
 }: IntegrationStepExecutionContext<ADOIntegrationConfig>) {
   const apiClient = createAPIClient(instance.config);
 
+  const emailToIdMap = new Map<string, string>();
+
   await apiClient.iterateWorkitems(async (item) => {
     const fields = item.fields || {};
+    const createdBy = extractEmail(fields['System.CreatedBy']);
+    const assignedTo = extractEmail(fields['System.AssignedTo']);
     const workItemEntity = await jobState.addEntity(
       createIntegrationEntity({
         entityData: {
@@ -41,19 +54,70 @@ export async function fetchWorkitems({
             state: fields['System.State'],
             reason: fields['System.Reason'],
             createdDate: fields['System.CreatedDate'],
-            createdBy: fields['System.CreatedBy'],
             changedDate: fields['System.ChangedDate'],
             changedBy: fields['System.ChangedBy'],
             commentCount: fields['System.CommentCount'],
-            stateChangeDate: fields[
-              'Microsoft.VSTS.Common.StateChangeDate'
-            ],
+            stateChangeDate: fields['Microsoft.VSTS.Common.StateChangeDate'],
             priority: fields['Microsoft.VSTS.Common.Priority'],
             history: fields['System.History'],
           },
         },
       }),
     );
+
+    let createdByUserEntity: Entity | undefined;
+    if (createdBy) {
+      const createdByUserId =
+        emailToIdMap.get(createdBy) ??
+        (await jobState.getData<string>(
+          UNIQUE_NAME_TO_USER_ID_MAPPING_PREFIX + createdBy,
+        ));
+      if (createdByUserId) {
+        emailToIdMap.set(createdBy, createdByUserId);
+        createdByUserEntity = (await jobState.findEntity(createdByUserId))!;
+        await jobState.addRelationship(
+          createDirectRelationship({
+            _class: RelationshipClass.CREATED,
+            from: createdByUserEntity,
+            to: workItemEntity,
+          }),
+        );
+      } else {
+        logger.info(
+          `User who created ticket ${item.id?.toString()} does not exist: ${createdBy}`,
+        );
+      }
+    }
+
+    if (assignedTo) {
+      let assignedToUserEntity: Entity | undefined;
+      if (assignedTo === createdBy) {
+        assignedToUserEntity = createdByUserEntity;
+      } else {
+        const assignedToUserId =
+          emailToIdMap.get(assignedTo) ??
+          (await jobState.getData<string>(
+            UNIQUE_NAME_TO_USER_ID_MAPPING_PREFIX + assignedTo,
+          ));
+        if (assignedToUserId) {
+          emailToIdMap.set(assignedTo, assignedToUserId);
+          createdByUserEntity = (await jobState.findEntity(assignedToUserId))!;
+        } else {
+          logger.info(
+            `User who is assigned ticket ${item.id?.toString()} does not exist: ${assignedTo}`,
+          );
+        }
+      }
+      if (assignedToUserEntity) {
+        await jobState.addRelationship(
+          createDirectRelationship({
+            _class: RelationshipClass.ASSIGNED,
+            from: assignedToUserEntity,
+            to: workItemEntity,
+          }),
+        );
+      }
+    }
 
     if (item.projectId != undefined) {
       const projectEntity = await jobState.findEntity(item.projectId);
@@ -91,8 +155,20 @@ export const workitemSteps: IntegrationStep<ADOIntegrationConfig>[] = [
         sourceType: 'azure_devops_project',
         targetType: 'azure_devops_work_item',
       },
+      {
+        _type: 'azure_devops_user_created_work_item',
+        _class: RelationshipClass.CREATED,
+        sourceType: 'azure_devops_user',
+        targetType: 'azure_devops_work_item',
+      },
+      {
+        _type: 'azure_devops_user_assigned_work_item',
+        _class: RelationshipClass.ASSIGNED,
+        sourceType: 'azure_devops_user',
+        targetType: 'azure_devops_work_item',
+      },
     ],
-    dependsOn: ['fetch-projects'],
-    executionHandler: fetchWorkitems,
+    dependsOn: ['fetch-projects', 'fetch-users'],
+    executionHandler: fetchWorkItems,
   },
 ];

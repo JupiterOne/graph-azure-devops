@@ -1,0 +1,121 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fetchWorkItems Should create user entities and relationships: assignedRelationships 1`] = `
+Array [
+  Object {
+    "_class": "ASSIGNED",
+    "_fromEntityKey": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
+    "_key": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424|assigned|ec28b48e-62ee-443e-83a2-27e591f5c30a1",
+    "_toEntityKey": "ec28b48e-62ee-443e-83a2-27e591f5c30a1",
+    "_type": "azure_devops_user_assigned_work_item",
+    "displayName": "ASSIGNED",
+  },
+]
+`;
+
+exports[`fetchWorkItems Should create user entities and relationships: createdRelationships 1`] = `
+Array [
+  Object {
+    "_class": "CREATED",
+    "_fromEntityKey": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
+    "_key": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424|created|ec28b48e-62ee-443e-83a2-27e591f5c30a1",
+    "_toEntityKey": "ec28b48e-62ee-443e-83a2-27e591f5c30a1",
+    "_type": "azure_devops_user_created_work_item",
+    "displayName": "CREATED",
+  },
+]
+`;
+
+exports[`fetchWorkItems Should create user entities and relationships: hasRelationships 1`] = `
+Array [
+  Object {
+    "_class": "HAS",
+    "_fromEntityKey": "ec28b48e-62ee-443e-83a2-27e591f5c30a",
+    "_key": "ec28b48e-62ee-443e-83a2-27e591f5c30a|has|ec28b48e-62ee-443e-83a2-27e591f5c30a1",
+    "_toEntityKey": "ec28b48e-62ee-443e-83a2-27e591f5c30a1",
+    "_type": "azure_devops_project_has_work_item",
+    "displayName": "HAS",
+  },
+]
+`;
+
+exports[`fetchWorkItems Should create user entities and relationships: workItemEntities 1`] = `
+Array [
+  Object {
+    "_class": Array [
+      "Record",
+    ],
+    "_key": "ec28b48e-62ee-443e-83a2-27e591f5c30a1",
+    "_rawData": Array [
+      Object {
+        "name": "default",
+        "rawData": Object {
+          "fields": Object {
+            "Microsoft.VSTS.Common.Priority": 2,
+            "Microsoft.VSTS.Common.StateChangeDate": "2021-03-22T17:59:24.453Z",
+            "System.AreaId": 4,
+            "System.AreaLevel1": "Project One",
+            "System.AreaPath": "Project One",
+            "System.AssignedTo": "Michael Knoedel <michael.knoedel@jupiterone.com>",
+            "System.AttachedFileCount": 0,
+            "System.AuthorizedAs": "Michael Knoedel <michael.knoedel@jupiterone.com>",
+            "System.AuthorizedDate": "2021-03-22T17:59:37.637Z",
+            "System.BoardColumn": "To Do",
+            "System.BoardColumnDone": false,
+            "System.ChangedBy": "Michael Knoedel <michael.knoedel@jupiterone.com>",
+            "System.ChangedDate": "2021-03-22T17:59:37.637Z",
+            "System.CommentCount": 0,
+            "System.CreatedBy": "Michael Knoedel <michael.knoedel@jupiterone.com>",
+            "System.CreatedDate": "2021-03-22T17:59:24.453Z",
+            "System.ExternalLinkCount": 0,
+            "System.HyperLinkCount": 0,
+            "System.Id": 1,
+            "System.IterationId": 3,
+            "System.IterationLevel1": "Project One",
+            "System.IterationLevel2": "Sprint 1",
+            "System.IterationPath": "Project One\\\\Sprint 1",
+            "System.NodeName": "Project One",
+            "System.PersonId": 226500438,
+            "System.Reason": "Added to backlog",
+            "System.RelatedLinkCount": 0,
+            "System.RemoteLinkCount": 0,
+            "System.Rev": 2,
+            "System.RevisedDate": "9999-01-01T00:00:00Z",
+            "System.State": "To Do",
+            "System.TeamProject": "Project One",
+            "System.Title": "Item 1",
+            "System.Watermark": 2,
+            "System.WorkItemType": "Issue",
+          },
+          "id": 1,
+          "projectId": "ec28b48e-62ee-443e-83a2-27e591f5c30a",
+          "rev": 2,
+        },
+      },
+    ],
+    "_type": "azure_devops_work_item",
+    "areaPath": "Project One",
+    "changedBy": "Michael Knoedel <michael.knoedel@jupiterone.com>",
+    "changedDate": "2021-03-22T17:59:37.637Z",
+    "commentCount": 0,
+    "createdDate": "2021-03-22T17:59:24.453Z",
+    "createdOn": undefined,
+    "description": undefined,
+    "displayName": "Item 1",
+    "history": undefined,
+    "interationPath": "Project One\\\\Sprint 1",
+    "name": "Item 1",
+    "priority": 2,
+    "projectId": "ec28b48e-62ee-443e-83a2-27e591f5c30a",
+    "projectName": "Project One",
+    "reason": "Added to backlog",
+    "revision": 2,
+    "state": "To Do",
+    "stateChangeDate": "2021-03-22T17:59:24.453Z",
+    "teamProject": "Project One",
+    "type": "Issue",
+    "webLink": undefined,
+    "workItemType": "Issue",
+  },
+]
+`;

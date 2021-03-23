@@ -1,0 +1,56 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fetchUsers Should create user entities and relationships: userEntities 1`] = `
+Array [
+  Object {
+    "_class": Array [
+      "User",
+    ],
+    "_key": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
+    "_rawData": Array [
+      Object {
+        "name": "default",
+        "rawData": Object {
+          "identity": Object {
+            "_links": Object {
+              "avatar": Object {
+                "href": "https://dev.azure.com/michaelknoedel/_apis/GraphProfile/MemberAvatars/aad.Njg3NTczODAtOTcxMi03YWU4LWFmNmItNGRmZWExZWM4Y2Fj",
+              },
+            },
+            "descriptor": "aad.Njg3NTczODAtOTcxMi03YWU4LWFmNmItNGRmZWExZWM4Y2Fj",
+            "displayName": "Michael Knoedel",
+            "id": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
+            "imageUrl": "https://dev.azure.com/michaelknoedel/_api/_common/identityImage?id=e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
+            "uniqueName": "michael.knoedel@jupiterone.com",
+            "url": "https://spsprodcus5.vssps.visualstudio.com/Ae6472b42-435c-4da8-bb39-ae8a56ec4bbd/_apis/Identities/e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
+          },
+        },
+      },
+    ],
+    "_type": "azure_devops_user",
+    "createdOn": undefined,
+    "descriptor": "aad.Njg3NTczODAtOTcxMi03YWU4LWFmNmItNGRmZWExZWM4Y2Fj",
+    "displayName": "Michael Knoedel",
+    "email": "michael.knoedel@jupiterone.com",
+    "emailDomain": "jupiterone.com",
+    "imageLink": "https://dev.azure.com/michaelknoedel/_api/_common/identityImage?id=e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
+    "name": "Michael Knoedel",
+    "profileLink": undefined,
+    "username": "michael.knoedel@jupiterone.com",
+    "webLink": "https://spsprodcus5.vssps.visualstudio.com/Ae6472b42-435c-4da8-bb39-ae8a56ec4bbd/_apis/Identities/e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
+  },
+]
+`;
+
+exports[`fetchUsers Should create user entities and relationships: userRelationships 1`] = `
+Array [
+  Object {
+    "_class": "HAS",
+    "_fromEntityKey": "azure-devops-account:local-integration-instance",
+    "_key": "azure-devops-account:local-integration-instance|has|e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
+    "_toEntityKey": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
+    "_type": "azure_devops_account_has_user",
+    "displayName": "HAS",
+  },
+]
+`;
