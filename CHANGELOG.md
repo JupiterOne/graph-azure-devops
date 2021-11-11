@@ -8,6 +8,11 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- Added jest matcher `toThrowIntegrationAPIError` to verify that errors are
+  properly thrown
+
 ### Fixed
 
 - Fixed the `url`, `status`, and `statusText` properties passed into

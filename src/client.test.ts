@@ -3,6 +3,8 @@ import { getMatchRequestsBy } from '../test/getMatchRequestsBy';
 import { config } from '../test/config';
 import { createAPIClient } from './client';
 import { ADOIntegrationConfig } from './types';
+import { IntegrationProviderAuthenticationError } from '@jupiterone/integration-sdk-core';
+import { getMatchers } from 'expect/build/jestMatchersObject';
 
 let recording: Recording;
 
@@ -10,6 +12,77 @@ afterEach(async () => {
   if (recording) {
     await recording.stop();
   }
+});
+
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace jest {
+    interface Matchers<R> {
+      toThrowIntegrationAPIError(): R;
+    }
+  }
+}
+
+function getProviderAPIErrorRegex() {
+  const URL_MATCHER = '(www|http:|https:)+[^\\s]+[\\w]';
+  const STATUS_CODE_MATCHER = '[0-9]{3}';
+  const STATUS_MATCHER = '(?!(undefined)).+';
+  return new RegExp(
+    `Provider (authentication|authorization|API) failed at ${URL_MATCHER}: ${STATUS_CODE_MATCHER} ${STATUS_MATCHER}`,
+  );
+}
+
+function toThrowIntegrationAPIError(callable: () => any) {
+  // TODO this does not seem to work with `rejects`, e.g.
+  //   await expect(cb).rejects.toThrowIntegrationAPIError()
+  return getMatchers().toThrow(callable, getProviderAPIErrorRegex());
+}
+
+expect.extend({
+  toThrowIntegrationAPIError,
+});
+
+describe('toThrowIntegrationAPIError', () => {
+  // TODO move to SDK
+  test('should fail if url does not match', () => {
+    expect(() => {
+      throw new IntegrationProviderAuthenticationError({
+        endpoint: 'web.uri.something',
+        status: 401,
+        statusText: 'Unauthorized',
+      });
+    }).not.toThrowIntegrationAPIError();
+  });
+
+  test('should fail if status code is not 3-digit numeric', () => {
+    expect(() => {
+      throw new IntegrationProviderAuthenticationError({
+        endpoint: 'www.google.com',
+        status: 40,
+        statusText: 'Unauthorized',
+      });
+    }).not.toThrowIntegrationAPIError();
+  });
+
+  test('should fail if status is undefined', () => {
+    expect(() => {
+      throw new IntegrationProviderAuthenticationError({
+        endpoint: 'www.google.com',
+        status: 401,
+        statusText: (undefined as unknown) as string,
+      });
+    }).not.toThrowIntegrationAPIError();
+  });
+
+  test('should pass if all args are valid', () => {
+    expect(() => {
+      throw new IntegrationProviderAuthenticationError({
+        endpoint: 'www.google.com',
+        status: 401,
+        statusText: 'Unauthorized',
+      });
+    }).toThrowIntegrationAPIError();
+  });
 });
 
 describe('APIClient', () => {
@@ -45,7 +118,7 @@ describe('APIClient', () => {
 
       const client = createAPIClient(configWithInvalidOrgUrl);
       await expect(client.verifyAuthentication()).rejects.toThrow(
-        'Provider authentication failed at https://dev.azure.com/a-very-invalid-org-url/_apis/Location: 404 Not Found',
+        getProviderAPIErrorRegex(),
       );
     });
 
@@ -67,7 +140,7 @@ describe('APIClient', () => {
 
       const client = createAPIClient(configWithInvalidAccessToken);
       await expect(client.verifyAuthentication()).rejects.toThrow(
-        `Provider authentication failed at ${configWithInvalidAccessToken.orgUrl}/_apis/Location: 401 Failed request: (401)`,
+        getProviderAPIErrorRegex(),
       );
     });
   });
@@ -104,7 +177,7 @@ describe('APIClient', () => {
 
       const client = createAPIClient(config);
       await expect(client.iterateGroups(() => undefined)).rejects.toThrow(
-        'Provider authentication failed at https://dev.azure.com/default/_apis/teams: 401 Failed request: (401)',
+        getProviderAPIErrorRegex(),
       );
     });
   });
@@ -141,7 +214,7 @@ describe('APIClient', () => {
 
       const client = createAPIClient(config);
       await expect(client.iterateWorkitems(() => undefined)).rejects.toThrow(
-        'Provider authentication failed at https://dev.azure.com/default/<PROJECT_ID>/_apis/wit/reporting/workItemRevisions: 401 Failed request: (401)',
+        getProviderAPIErrorRegex(),
       );
     });
   });
@@ -178,7 +251,7 @@ describe('APIClient', () => {
 
       const client = createAPIClient(config);
       await expect(client.iterateProjects(() => undefined)).rejects.toThrow(
-        'Provider authentication failed at https://dev.azure.com/default/_apis/projects: 401 Failed request: (401)',
+        getProviderAPIErrorRegex(),
       );
     });
   });
@@ -215,7 +288,7 @@ describe('APIClient', () => {
 
       const client = createAPIClient(config);
       await expect(client.iterateUsers(() => undefined)).rejects.toThrow(
-        'Provider authentication failed at https://dev.azure.com/default/_apis/teams: 401 Failed request: (401)',
+        getProviderAPIErrorRegex(),
       );
     });
   });
