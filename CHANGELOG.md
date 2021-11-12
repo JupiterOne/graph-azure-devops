@@ -8,6 +8,11 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed the `url`, `status`, and `statusText` properties passed into
+  `IntegrationProviderAuthenticationError` in this client
+
 ## 1.0.2 - 3-23-21
 
 ### Added

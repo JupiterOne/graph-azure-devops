@@ -58,8 +58,6 @@ function mutateRecordingEntry(entry: RecordingEntry): void {
     entry.response.content.text = responseText;
   }
 
-  const responseJson = JSON.parse(responseText);
-
   const DEFAULT_REDACT = '[REDACTED]';
   const keysToRedactMap = new Map();
 
@@ -76,6 +74,13 @@ function mutateRecordingEntry(entry: RecordingEntry): void {
   keysToRedactMap.set('url', (val) =>
     val.replace(last(config.orgUrl.split('/')), DEFAULT_ORG_NAME),
   );
+
+  let responseJson: any;
+  try {
+    responseJson = JSON.parse(responseText);
+  } catch (err) {
+    // pass
+  }
 
   if (responseJson?.value?.forEach) {
     responseJson.value.forEach((responseValue, index) => {
