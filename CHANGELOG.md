@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.0.3] - 11-12-2021
+
 ### Fixed
 
 - Fixed the `url`, `status`, and `statusText` properties passed into
