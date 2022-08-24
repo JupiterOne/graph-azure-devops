@@ -18,13 +18,14 @@
 ## Requirements
 
 - The Azure DevOps + JupiterOne integration uses a read-only, personal access
-  token to ingest data from the Azure DevOps platform. You must have the necessary
-  permissions to generate a personal access token in Azure DevOps.
+  token to ingest data from the Azure DevOps platform. You must have the
+  necessary permissions to generate a personal access token in Azure DevOps.
 - You must have permission in JupiterOne to install new integrations.
 
 ## Support
 
-If you need help with this integration, contact [JupiterOne Support](https://support.jupiterone.io).
+If you need help with this integration, contact
+[JupiterOne Support](https://support.jupiterone.io).
 
 ## How to Use the Integration
 
@@ -41,8 +42,8 @@ If you need help with this integration, contact [JupiterOne Support](https://sup
 2. Scroll down to **Azure DevOps** and click it.
 3. Click **Add Configuration** and configure the following settings:
 
-- Enter the account name by which you want to identify this Azure DevOps
-  account in JupiterOne. Select **Tag with Account Name** to store this value in 
+- Enter the account name by which you want to identify this Azure DevOps account
+  in JupiterOne. Select **Tag with Account Name** to store this value in
   `tag.AccountName` of the ingested assets.
 - Enter a description to help your team identify the integration.
 - Select a polling interval that is sufficient for your monitoring requirements.
