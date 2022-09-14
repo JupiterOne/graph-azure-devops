@@ -10,6 +10,8 @@ import {
 import { TeamMember } from 'azure-devops-node-api/interfaces/common/VSSInterfaces';
 import { WorkItem } from 'azure-devops-node-api/interfaces/WorkItemTrackingInterfaces';
 import { ICoreApi } from 'azure-devops-node-api/CoreApi';
+import { IBuildApi } from 'azure-devops-node-api/BuildApi';
+import { BuildRepository } from 'azure-devops-node-api/interfaces/BuildInterfaces';
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
 
@@ -190,6 +192,31 @@ export class APIClient {
       await iteratee(item);
     }
   }
+
+  /**
+   * Iterates each repository resource in the provider.
+   *
+   * @param iteratee receives each resource to produce entities/relationships
+   */
+  public async iterateBuildRepositories(
+    projectId,
+    iteratee: ResourceIteratee<BuildRepository>,
+  ): Promise<void> {
+    const connection = getConnection(
+      this.config.accessToken,
+      this.config.orgUrl,
+    );
+
+    const buildApi = await getBuildApi(connection);
+    const builds = await getBuilds(buildApi, projectId);
+
+    for (const build of builds || []) {
+      const { repository } = build;
+      if (repository) {
+        await iteratee(repository);
+      }
+    }
+  }
 }
 
 export function createAPIClient(config: ADOIntegrationConfig): APIClient {
@@ -213,6 +240,30 @@ function getConnection(accessToken: string, orgUrl: string) {
 async function getCoreApi(connection: azdev.WebApi) {
   try {
     return await connection.getCoreApi();
+  } catch (err) {
+    /**
+     * The ADO client does not expose status / status message clearly. We used
+     * tests to understand the expected behavior when calling this API with
+     * various invalid arguments (see client.test.ts)
+     */
+    let status: number | undefined = undefined;
+    let statusText: string | undefined = undefined;
+    if (err.message === "Cannot read property 'value' of null") {
+      status = 404;
+      statusText = 'Not Found';
+    }
+    throw new IntegrationProviderAuthenticationError({
+      cause: err,
+      endpoint: connection.serverUrl + '/_apis/Location',
+      status: status || err.statusCode,
+      statusText: statusText || err.message,
+    });
+  }
+}
+
+async function getBuildApi(connection: azdev.WebApi) {
+  try {
+    return await connection.getBuildApi();
   } catch (err) {
     /**
      * The ADO client does not expose status / status message clearly. We used
@@ -271,6 +322,19 @@ async function getTeamMembers(
     throw new IntegrationProviderAuthenticationError({
       cause: err,
       endpoint: core.baseUrl + `/projects/${projectId}/teams/${teamId}/members`,
+      status: err.statusCode,
+      statusText: err.message,
+    });
+  }
+}
+
+async function getBuilds(build: IBuildApi, projectId: string) {
+  try {
+    return await build.getBuilds(projectId);
+  } catch (err) {
+    throw new IntegrationProviderAuthenticationError({
+      cause: err,
+      endpoint: build.baseUrl + `${projectId}/_apis/build`,
       status: err.statusCode,
       statusText: err.message,
     });

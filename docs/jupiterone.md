@@ -18,13 +18,14 @@
 ## Requirements
 
 - The Azure DevOps + JupiterOne integration uses a read-only, personal access
-  token to ingest data from the Azure DevOps platform. You must have the necessary
-  permissions to generate a personal access token in Azure DevOps.
+  token to ingest data from the Azure DevOps platform. You must have the
+  necessary permissions to generate a personal access token in Azure DevOps.
 - You must have permission in JupiterOne to install new integrations.
 
 ## Support
 
-If you need help with this integration, contact [JupiterOne Support](https://support.jupiterone.io).
+If you need help with this integration, contact
+[JupiterOne Support](https://support.jupiterone.io).
 
 ## How to Use the Integration
 
@@ -41,8 +42,8 @@ If you need help with this integration, contact [JupiterOne Support](https://sup
 2. Scroll down to **Azure DevOps** and click it.
 3. Click **Add Configuration** and configure the following settings:
 
-- Enter the account name by which you want to identify this Azure DevOps
-  account in JupiterOne. Select **Tag with Account Name** to store this value in 
+- Enter the account name by which you want to identify this Azure DevOps account
+  in JupiterOne. Select **Tag with Account Name** to store this value in
   `tag.AccountName` of the ingested assets.
 - Enter a description to help your team identify the integration.
 - Select a polling interval that is sufficient for your monitoring requirements.
@@ -67,7 +68,7 @@ NOTE: ALL OF THE FOLLOWING DOCUMENTATION IS GENERATED USING THE
 "j1-integration document" COMMAND. DO NOT EDIT BY HAND! PLEASE SEE THE DEVELOPER
 DOCUMENTATION FOR USAGE INFORMATION:
 
-https://github.com/JupiterOne/sdk/blob/master/docs/integrations/development.md
+https://github.com/JupiterOne/sdk/blob/main/docs/integrations/development.md
 ********************************************************************************
 -->
 
@@ -84,10 +85,11 @@ The following entities are created:
 | ADO User             | `azure_devops_user`      | `User`          |
 | ADO WorkItem         | `azure_devops_work_item` | `Record`        |
 | Azure Devops Account | `azure_devops_account`   | `Account`       |
+| Repository           | `azure_devops_repo`      | `Repository`    |
 
 ### Relationships
 
-The following relationships are created/mapped:
+The following relationships are created:
 
 | Source Entity `_type`  | Relationship `_class` | Target Entity `_type`    |
 | ---------------------- | --------------------- | ------------------------ |
@@ -96,9 +98,18 @@ The following relationships are created/mapped:
 | `azure_devops_account` | **HAS**               | `azure_devops_user`      |
 | `azure_devops_project` | **HAS**               | `azure_devops_team`      |
 | `azure_devops_project` | **HAS**               | `azure_devops_work_item` |
+| `azure_devops_project` | **USES**              | `azure_devops_repo`      |
 | `azure_devops_team`    | **HAS**               | `azure_devops_user`      |
 | `azure_devops_user`    | **ASSIGNED**          | `azure_devops_work_item` |
 | `azure_devops_user`    | **CREATED**           | `azure_devops_work_item` |
+
+### Mapped Relationships
+
+The following mapped relationships are created:
+
+| Source Entity `_type`  | Relationship `_class` | Target Entity `_type` | Direction |
+| ---------------------- | --------------------- | --------------------- | --------- |
+| `azure_devops_project` | **USES**              | `*azure_devops_repo*` | FORWARD   |
 
 <!--
 ********************************************************************************

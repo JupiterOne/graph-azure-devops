@@ -8,6 +8,17 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Updated
+
+- Updated SDK package versions to v8
+
+### Added
+
+- Added new entity `azure_devops_repo`
+- Added new mapped relationship `azure_devops_project_uses_repo`
+- Added new relationship `azure_devops_project_uses_repo` if repo isn't github
+  or bitbucket
+
 ## [1.0.3] - 11-12-2021
 
 ### Fixed

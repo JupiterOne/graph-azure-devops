@@ -30,7 +30,7 @@ export async function fetchProjects({
           assign: {
             _type: 'azure_devops_project',
             _class: 'Project',
-            _key: project.id,
+            _key: project.id as string,
             name: project.name,
             displayName: project.name,
             abbreviation: project.abbreviation,

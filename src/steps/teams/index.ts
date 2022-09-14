@@ -30,7 +30,7 @@ export async function fetchTeams({
           assign: {
             _type: 'azure_devops_team',
             _class: 'UserGroup',
-            _key: team.id,
+            _key: team.id as string,
             name: team.name,
             displayName: team.name,
             webLink: team.url,
