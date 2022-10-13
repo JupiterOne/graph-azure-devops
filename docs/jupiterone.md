@@ -109,7 +109,7 @@ The following mapped relationships are created:
 
 | Source Entity `_type`  | Relationship `_class` | Target Entity `_type` | Direction |
 | ---------------------- | --------------------- | --------------------- | --------- |
-| `azure_devops_project` | **USES**              | `*azure_devops_repo*` | FORWARD   |
+| `azure_devops_project` | **USES**              | `*github_repo*`       | FORWARD   |
 
 <!--
 ********************************************************************************
