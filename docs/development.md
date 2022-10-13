@@ -9,4 +9,5 @@ Create a free trial account
 
 Generate a personal access token at
 https://dev.azure.com/{{`your_azure_boards_organiztion_name`}}/_usersSettings/tokens.
-Be sure to give `Read` permissions for `Work Items` and `Project and Team`.
+Be sure to give `Read` permissions for `Work Items`, `Code`, `Project and Team`
+and `Build`.
