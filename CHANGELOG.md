@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 2.0.0 - 2022-10-18
+
 ### Updated
 
 - Updated SDK package versions to v8
