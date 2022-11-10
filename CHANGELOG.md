@@ -8,6 +8,11 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed issue related to duplicate keys when project has more than one pipeline
+  for a repository hosted on Azure DevOps.
+
 ## 2.0.0 - 2022-10-18
 
 ### Updated

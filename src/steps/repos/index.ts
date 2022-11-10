@@ -61,31 +61,33 @@ export async function fetchRepositories({
               await jobState.addRelationship(relationship);
             }
           } else {
-            const repositoryEntity = await jobState.addEntity(
-              createIntegrationEntity({
-                entityData: {
-                  source: repository,
-                  assign: {
-                    _type: 'azure_devops_repo',
-                    _class: 'CodeRepo',
-                    _key: `azure_devops_repo:${repository.id}`,
-                    defaultBranch: repository.defaultBranch,
-                    fullName: repository.name,
-                    id: repository.id,
-                    webLink: repository.url,
-                    type: repository.type,
-                  },
+            const repositoryEntity = createIntegrationEntity({
+              entityData: {
+                source: repository,
+                assign: {
+                  _type: 'azure_devops_repo',
+                  _class: 'CodeRepo',
+                  _key: `azure_devops_repo:${repository.id}`,
+                  defaultBranch: repository.defaultBranch,
+                  fullName: repository.name,
+                  id: repository.id,
+                  webLink: repository.url,
+                  type: repository.type,
                 },
-              }),
-            );
+              },
+            });
 
-            await jobState.addRelationship(
-              createDirectRelationship({
-                _class: RelationshipClass.USES,
-                from: projectEntity,
-                to: repositoryEntity,
-              }),
-            );
+            if (!(await jobState.hasKey(repositoryEntity._key))) {
+              await jobState.addEntity(repositoryEntity);
+
+              await jobState.addRelationship(
+                createDirectRelationship({
+                  _class: RelationshipClass.USES,
+                  from: projectEntity,
+                  to: repositoryEntity,
+                }),
+              );
+            }
           }
         },
       );
