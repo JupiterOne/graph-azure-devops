@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 2.0.1 - 2022-11-10
+
 ### Fixed
 
 - Fixed issue related to duplicate keys when project has more than one pipeline
