@@ -1,0 +1,12 @@
+openapi: 3.0.1
+info:
+  title: '@jupiterone/graph-azure-devops'
+  description: A JupiterOne Integration
+  x-cortex-git:
+    github:
+      repository: JupiterOne/graph-azure-devops
+  x-cortex-owners:
+    - type: group
+      name: JupiterOne/integrations
+  x-cortex-service-groups: tier-4
+  x-cortex-tag: '@jupiterone/graph-azure-devops'

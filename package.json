@@ -2,6 +2,10 @@
   "name": "@jupiterone/graph-azure-devops",
   "version": "2.0.1",
   "description": "A JupiterOne Integration",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JupiterOne/graph-azure-devops"
+  },
   "license": "MPL-2.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
