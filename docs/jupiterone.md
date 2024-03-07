@@ -96,9 +96,9 @@ The following relationships are created:
 | `azure_devops_account` | **HAS**               | `azure_devops_project`   |
 | `azure_devops_account` | **HAS**               | `azure_devops_team`      |
 | `azure_devops_account` | **HAS**               | `azure_devops_user`      |
+| `azure_devops_project` | **USES**              | `azure_devops_repo`      |
 | `azure_devops_project` | **HAS**               | `azure_devops_team`      |
 | `azure_devops_project` | **HAS**               | `azure_devops_work_item` |
-| `azure_devops_project` | **USES**              | `azure_devops_repo`      |
 | `azure_devops_team`    | **HAS**               | `azure_devops_user`      |
 | `azure_devops_user`    | **ASSIGNED**          | `azure_devops_work_item` |
 | `azure_devops_user`    | **CREATED**           | `azure_devops_work_item` |
@@ -109,6 +109,7 @@ The following mapped relationships are created:
 
 | Source Entity `_type`  | Relationship `_class` | Target Entity `_type` | Direction |
 | ---------------------- | --------------------- | --------------------- | --------- |
+| `azure_devops_project` | **USES**              | `*bitbucket_repo*`    | FORWARD   |
 | `azure_devops_project` | **USES**              | `*github_repo*`       | FORWARD   |
 
 <!--
