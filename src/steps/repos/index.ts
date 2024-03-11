@@ -7,16 +7,28 @@ import {
   createMappedRelationship,
   RelationshipDirection,
   createDirectRelationship,
+  IntegrationMissingKeyError,
 } from '@jupiterone/integration-sdk-core';
 import { TeamProjectReference } from 'azure-devops-node-api/interfaces/CoreInterfaces';
 
 import { createAPIClient } from '../../client';
 import { ADOIntegrationConfig } from '../../types';
+import {
+  Steps,
+  Entities,
+  Relationships,
+  MappedRelationships,
+} from '../constant';
+import { getAccountKey } from '../account';
 
 const DOMAINS = {
   Bitbucket: 'https://bitbucket.org/',
   GitHub: 'https://github.com/',
 };
+
+export function getRepoKey(repoId) {
+  return `azure_devops_repo:${repoId}`;
+}
 
 export async function fetchRepositories({
   instance,
@@ -26,7 +38,7 @@ export async function fetchRepositories({
   const apiClient = createAPIClient(instance.config);
 
   await jobState.iterateEntities(
-    { _type: 'azure_devops_project' },
+    { _type: Entities.PROJECT_ENTITY._type },
     async (projectEntity) => {
       const project = getRawData<TeamProjectReference>(projectEntity);
       if (!project) {
@@ -65,14 +77,15 @@ export async function fetchRepositories({
               entityData: {
                 source: repository,
                 assign: {
-                  _type: 'azure_devops_repo',
-                  _class: 'CodeRepo',
-                  _key: `azure_devops_repo:${repository.id}`,
+                  _type: Entities.REPOSITORY_ENTITY._type,
+                  _class: Entities.REPOSITORY_ENTITY._class,
+                  _key: getRepoKey(repository.id),
                   defaultBranch: repository.defaultBranch,
                   fullName: repository.name,
                   id: repository.id,
                   webLink: repository.url,
                   type: repository.type,
+                  projectId: project.id,
                 },
               },
             });
@@ -95,42 +108,52 @@ export async function fetchRepositories({
   );
 }
 
+export async function buildAccontRepoRelationship({
+  jobState,
+  instance,
+}: IntegrationStepExecutionContext<ADOIntegrationConfig>) {
+  await jobState.iterateEntities(
+    { _type: Entities.REPOSITORY_ENTITY._type },
+    async (repoEntity) => {
+      const accountKey = getAccountKey(instance.id);
+      if (jobState.hasKey(accountKey)) {
+        await jobState.addRelationship(
+          createDirectRelationship({
+            _class: RelationshipClass.OWNS,
+            fromKey: accountKey,
+            fromType: Entities.ACCOUNT_ENTITY._type,
+            toKey: repoEntity._key,
+            toType: Entities.REPOSITORY_ENTITY._type,
+          }),
+        );
+      } else {
+        throw new IntegrationMissingKeyError(
+          `Build-Account-Repo-Relationship: ${accountKey} Missing.`,
+        );
+      }
+    },
+  );
+}
+
 export const repositorySteps: IntegrationStep<ADOIntegrationConfig>[] = [
   {
-    id: 'fetch-repositories',
+    id: Steps.FETCH_REPOSITORY,
     name: 'Fetch Repositories',
-    entities: [
-      {
-        resourceName: 'Repository',
-        _type: 'azure_devops_repo',
-        _class: 'Repository',
-      },
-    ],
-    relationships: [
-      {
-        _type: 'azure_devops_project_uses_repo',
-        _class: RelationshipClass.USES,
-        sourceType: 'azure_devops_project',
-        targetType: 'azure_devops_repo',
-      },
-    ],
+    entities: [Entities.REPOSITORY_ENTITY],
+    relationships: [Relationships.PROJECT_HAS_REPO],
     mappedRelationships: [
-      {
-        _type: 'azure_devops_project_uses_repo',
-        _class: RelationshipClass.USES,
-        sourceType: 'azure_devops_project',
-        targetType: 'github_repo',
-        direction: RelationshipDirection.FORWARD,
-      },
-      {
-        _type: 'azure_devops_project_uses_repo',
-        _class: RelationshipClass.USES,
-        sourceType: 'azure_devops_project',
-        targetType: 'bitbucket_repo',
-        direction: RelationshipDirection.FORWARD,
-      },
+      MappedRelationships.PROJECT_USES_GITHUB_REPO,
+      MappedRelationships.PROJECT_USES_BITBUCKET_REPO,
     ],
-    dependsOn: ['fetch-projects'],
+    dependsOn: [Steps.FETCH_PROJECTS],
     executionHandler: fetchRepositories,
+  },
+  {
+    id: Steps.BUILD_ACCONT_REPO_RELATIONSHIP,
+    name: 'Build Accont Repo Relationship',
+    entities: [],
+    relationships: [Relationships.ACCOUNT_OWNS_REPO],
+    dependsOn: [Steps.FETCH_ACCOUNT, Steps.FETCH_REPOSITORY],
+    executionHandler: buildAccontRepoRelationship,
   },
 ];

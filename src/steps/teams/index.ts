@@ -10,7 +10,8 @@ import {
 
 import { createAPIClient } from '../../client';
 import { ADOIntegrationConfig } from '../../types';
-import { AZURE_DEVOPS_ACCOUNT } from '../account';
+import { Steps, Entities } from '../constant';
+import { getUserKey } from '../users';
 
 export async function fetchTeams({
   instance,
@@ -19,7 +20,7 @@ export async function fetchTeams({
   const apiClient = createAPIClient(instance.config);
 
   const accountEntity = (await jobState.getData(
-    AZURE_DEVOPS_ACCOUNT,
+    Entities.ACCOUNT_ENTITY._type,
   )) as Entity;
 
   await apiClient.iterateGroups(async (team) => {
@@ -52,7 +53,7 @@ export async function fetchTeams({
     );
 
     for (const user of team.users || []) {
-      const userEntity = await jobState.findEntity(user.id);
+      const userEntity = await jobState.findEntity(getUserKey(user.id));
 
       if (!userEntity) {
         throw new IntegrationMissingKeyError(
@@ -118,7 +119,7 @@ export const teamSteps: IntegrationStep<ADOIntegrationConfig>[] = [
         targetType: 'azure_devops_user',
       },
     ],
-    dependsOn: ['fetch-users', 'fetch-projects'],
+    dependsOn: ['fetch-users', Steps.FETCH_PROJECTS],
     executionHandler: fetchTeams,
   },
 ];

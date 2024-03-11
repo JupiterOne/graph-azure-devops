@@ -11,7 +11,14 @@ import { TeamMember } from 'azure-devops-node-api/interfaces/common/VSSInterface
 import { WorkItem } from 'azure-devops-node-api/interfaces/WorkItemTrackingInterfaces';
 import { ICoreApi } from 'azure-devops-node-api/CoreApi';
 import { IBuildApi } from 'azure-devops-node-api/BuildApi';
-import { BuildRepository } from 'azure-devops-node-api/interfaces/BuildInterfaces';
+import {
+  BuildDefinitionReference,
+  BuildRepository,
+  PipelineGeneralSettings,
+} from 'azure-devops-node-api/interfaces/BuildInterfaces';
+import { ITaskAgentApi } from 'azure-devops-node-api/TaskAgentApi';
+import { IGitApi } from 'azure-devops-node-api/GitApi';
+import { GitPullRequest } from 'azure-devops-node-api/interfaces/GitInterfaces';
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
 
@@ -207,14 +214,97 @@ export class APIClient {
       this.config.orgUrl,
     );
 
-    const buildApi = await getBuildApi(connection);
-    const builds = await getBuilds(buildApi, projectId);
+    const gitApi = await getGitAPI(connection);
+    const Repos = await getRepos(gitApi, projectId);
 
-    for (const build of builds || []) {
-      const { repository } = build;
-      if (repository) {
-        await iteratee(repository);
-      }
+    for (const repo of Repos || []) {
+      await iteratee(repo);
+    }
+  }
+
+  /**
+   * Iterates each pipeline resource in the provider.
+   *
+   * @param iteratee receives each resource to produce entities/relationships
+   */
+  public async iteratePipelines(
+    projectId,
+    iteratee: ResourceIteratee<BuildDefinitionReference>,
+  ): Promise<void> {
+    const connection = getConnection(
+      this.config.accessToken,
+      this.config.orgUrl,
+    );
+
+    const buildApi = await getBuildApi(connection);
+    const pipelines = await getBuildPipelines(buildApi, projectId);
+
+    for (const pipeline of pipelines || []) {
+      await iteratee(pipeline);
+    }
+  }
+
+  /**
+   * Iterates each Environments resource in the provider.
+   *
+   * @param iteratee receives each resource to produce entities/relationships
+   */
+  public async iterateEnvironments(
+    projectId,
+    iteratee: ResourceIteratee<BuildDefinitionReference>,
+  ): Promise<void> {
+    const connection = getConnection(
+      this.config.accessToken,
+      this.config.orgUrl,
+    );
+    const taskAgentApi = await getTaskAgentApi(connection);
+    const environments = await getEnvironments(taskAgentApi, projectId);
+    for (const environment of environments || []) {
+      await iteratee(environment);
+    }
+  }
+
+  /**
+   * Iterates each build Settings resource in the provider.
+   *
+   * @param iteratee receives each resource to produce entities/relationships
+   */
+  public async iterateBuildSettings(
+    projectId,
+    iteratee: ResourceIteratee<PipelineGeneralSettings>,
+  ) {
+    const connection = getConnection(
+      this.config.accessToken,
+      this.config.orgUrl,
+    );
+    const buildApi = await getBuildApi(connection);
+    const buildGeneralSettings = await getBuildGeneralSettings(
+      buildApi,
+      projectId,
+    );
+    await iteratee(buildGeneralSettings);
+  }
+
+  /**
+   * Iterates each Pull Request resource in the provider.
+   *
+   * @param iteratee receives each resource to produce entities/relationships
+   */
+  public async iteratePullRequests(
+    projectId,
+    repoId,
+    iteratee: ResourceIteratee<GitPullRequest>,
+  ) {
+    const connection = getConnection(
+      this.config.accessToken,
+      this.config.orgUrl,
+    );
+    const gitApi = await getGitAPI(connection);
+
+    const pullRequests = await getPullRequests(gitApi, projectId, repoId);
+
+    for (let pullRequest of pullRequests || []) {
+      iteratee(pullRequest);
     }
   }
 }
@@ -285,6 +375,54 @@ async function getBuildApi(connection: azdev.WebApi) {
   }
 }
 
+async function getTaskAgentApi(connection: azdev.WebApi) {
+  try {
+    return await connection.getTaskAgentApi();
+  } catch (err) {
+    /**
+     * The ADO client does not expose status / status message clearly. We used
+     * tests to understand the expected behavior when calling this API with
+     * various invalid arguments (see client.test.ts)
+     */
+    let status: number | undefined = undefined;
+    let statusText: string | undefined = undefined;
+    if (err.message === "Cannot read property 'value' of null") {
+      status = 404;
+      statusText = 'Not Found';
+    }
+    throw new IntegrationProviderAuthenticationError({
+      cause: err,
+      endpoint: connection.serverUrl + '/_apis/Location',
+      status: status || err.statusCode,
+      statusText: statusText || err.message,
+    });
+  }
+}
+
+async function getGitAPI(connection: azdev.WebApi) {
+  try {
+    return await connection.getGitApi();
+  } catch (err) {
+    /**
+     * The ADO client does not expose status / status message clearly. We used
+     * tests to understand the expected behavior when calling this API with
+     * various invalid arguments (see client.test.ts)
+     */
+    let status: number | undefined = undefined;
+    let statusText: string | undefined = undefined;
+    if (err.message === "Cannot read property 'value' of null") {
+      status = 404;
+      statusText = 'Not Found';
+    }
+    throw new IntegrationProviderAuthenticationError({
+      cause: err,
+      endpoint: connection.serverUrl + '/_apis/Location',
+      status: status || err.statusCode,
+      statusText: statusText || err.message,
+    });
+  }
+}
+
 async function getProjects(core: ICoreApi) {
   try {
     return await core.getProjects();
@@ -328,15 +466,90 @@ async function getTeamMembers(
   }
 }
 
-async function getBuilds(build: IBuildApi, projectId: string) {
+async function getRepos(gitApi: IGitApi, projectId: string) {
   try {
-    return await build.getBuilds(projectId);
+    return await gitApi.getRepositories(projectId);
   } catch (err) {
     throw new IntegrationProviderAuthenticationError({
       cause: err,
-      endpoint: build.baseUrl + `${projectId}/_apis/build`,
+      endpoint: gitApi.baseUrl + `${projectId}/_apis/git/repositories`,
       status: err.statusCode,
       statusText: err.message,
     });
+  }
+}
+
+async function getBuildPipelines(build: IBuildApi, projectId: string) {
+  try {
+    return await build.getDefinitions(projectId);
+  } catch (err) {
+    if (err.message.includes('connect ETIMEDOUT')) {
+      return getBuildPipelines(build, projectId);
+    } else {
+      throw new IntegrationProviderAuthenticationError({
+        cause: err,
+        endpoint: build.baseUrl + `${projectId}/_apis/pipelines`,
+        status: err.statusCode,
+        statusText: err.message,
+      });
+    }
+  }
+}
+
+async function getEnvironments(taskAgentApi: ITaskAgentApi, projectId: string) {
+  try {
+    return await taskAgentApi.getEnvironments(projectId);
+  } catch (err) {
+    if (err.message.includes('connect ETIMEDOUT')) {
+      return getEnvironments(taskAgentApi, projectId);
+    } else {
+      throw new IntegrationProviderAuthenticationError({
+        cause: err,
+        endpoint:
+          taskAgentApi.baseUrl + `${projectId}/_apis/pipelines/environments`,
+        status: err.statusCode,
+        statusText: err.message,
+      });
+    }
+  }
+}
+
+async function getBuildGeneralSettings(build: IBuildApi, projectId: string) {
+  try {
+    return await build.getBuildGeneralSettings(projectId);
+  } catch (err) {
+    if (err.message.includes('connect ETIMEDOUT')) {
+      return getBuildGeneralSettings(build, projectId);
+    } else {
+      throw new IntegrationProviderAuthenticationError({
+        cause: err,
+        endpoint: build.baseUrl + `${projectId}/_apis/build/generalsettings`,
+        status: err.statusCode,
+        statusText: err.message,
+      });
+    }
+  }
+}
+
+async function getPullRequests(
+  gitApi: IGitApi,
+  projectId: string,
+  repoId: string,
+) {
+  try {
+    return await gitApi.getPullRequests(repoId, {}, projectId);
+  } catch (err) {
+    if (err.message.includes('connect ETIMEDOUT')) {
+      return getPullRequests(gitApi, projectId, repoId);
+    } else {
+      throw new IntegrationProviderAuthenticationError({
+        cause: err,
+        endpoint:
+          gitApi.baseUrl +
+          `${projectId}/_apis/git/repositories/${repoId}/pullrequests`,
+        status: err.statusCode,
+        statusText: err.message,
+      });
+    }
   }
 }
