@@ -1,4 +1,7 @@
-import { IntegrationProviderAuthenticationError } from '@jupiterone/integration-sdk-core';
+import {
+  IntegrationLogger,
+  IntegrationProviderAuthenticationError,
+} from '@jupiterone/integration-sdk-core';
 
 import { ADOIntegrationConfig } from './types';
 
@@ -19,6 +22,8 @@ import {
 import { ITaskAgentApi } from 'azure-devops-node-api/TaskAgentApi';
 import { IGitApi } from 'azure-devops-node-api/GitApi';
 import { GitPullRequest } from 'azure-devops-node-api/interfaces/GitInterfaces';
+import { IAlertApi } from 'azure-devops-node-api/AlertApi';
+import { Alert } from 'azure-devops-node-api/interfaces/AlertInterfaces';
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
 
@@ -307,6 +312,30 @@ export class APIClient {
       iteratee(pullRequest);
     }
   }
+
+  public async iterateAlerts(
+    projectId,
+    repoId,
+    logger: IntegrationLogger,
+    iteratee: ResourceIteratee<Alert>,
+  ) {
+    const connection = getConnection(
+      this.config.accessToken,
+      this.config.orgUrl,
+    );
+    const alertApi = await getAlertAPI(connection);
+
+    const alerts = (await getAlerts(
+      alertApi,
+      projectId,
+      repoId,
+      logger,
+    )) as Alert[];
+
+    for (let alert of alerts || []) {
+      iteratee(alert);
+    }
+  }
 }
 
 export function createAPIClient(config: ADOIntegrationConfig): APIClient {
@@ -354,6 +383,30 @@ async function getCoreApi(connection: azdev.WebApi) {
 async function getBuildApi(connection: azdev.WebApi) {
   try {
     return await connection.getBuildApi();
+  } catch (err) {
+    /**
+     * The ADO client does not expose status / status message clearly. We used
+     * tests to understand the expected behavior when calling this API with
+     * various invalid arguments (see client.test.ts)
+     */
+    let status: number | undefined = undefined;
+    let statusText: string | undefined = undefined;
+    if (err.message === "Cannot read property 'value' of null") {
+      status = 404;
+      statusText = 'Not Found';
+    }
+    throw new IntegrationProviderAuthenticationError({
+      cause: err,
+      endpoint: connection.serverUrl + '/_apis/Location',
+      status: status || err.statusCode,
+      statusText: statusText || err.message,
+    });
+  }
+}
+
+async function getAlertAPI(connection: azdev.WebApi) {
+  try {
+    return await connection.getAlertApi();
   } catch (err) {
     /**
      * The ADO client does not expose status / status message clearly. We used
@@ -547,6 +600,37 @@ async function getPullRequests(
         endpoint:
           gitApi.baseUrl +
           `${projectId}/_apis/git/repositories/${repoId}/pullrequests`,
+        status: err.statusCode,
+        statusText: err.message,
+      });
+    }
+  }
+}
+
+async function getAlerts(
+  alertApi: IAlertApi,
+  projectId: string,
+  repoId: string,
+  logger: IntegrationLogger,
+) {
+  try {
+    return await alertApi.getAlerts(projectId, repoId);
+  } catch (err) {
+    if (err.message.includes('connect ETIMEDOUT')) {
+      return getAlerts(alertApi, projectId, repoId, logger);
+    } else if (
+      err.message.includes(
+        'Advanced Security is not enabled for this repository.',
+      )
+    ) {
+      logger.warn(`Advanced Security is not enabled for ${repoId} repository.`);
+      return [];
+    } else {
+      throw new IntegrationProviderAuthenticationError({
+        cause: err,
+        endpoint:
+          alertApi.baseUrl +
+          `${projectId}/_apis/alert/repositories/${repoId}/alerts`,
         status: err.statusCode,
         statusText: err.message,
       });

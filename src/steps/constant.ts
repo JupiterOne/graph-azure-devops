@@ -10,23 +10,75 @@ export const PullRequestStatus = {
   /**
    * Status not set. Default state.
    */
-  NotSet: 0,
+  0: 'NotSet',
   /**
    * Pull request is active.
    */
-  Active: 1,
+  1: 'Active',
   /**
    * Pull request is abandoned.
    */
-  Abandoned: 2,
+  2: 'Abandoned',
   /**
    * Pull request is completed.
    */
-  Completed: 3,
+  3: 'Completed',
   /**
    * Used in pull request search criteria to include all statuses.
    */
-  All: 4,
+  4: 'All',
+};
+
+export const AlertType = {
+  /**
+   * The code has an unspecified vulnerability type
+   */
+  0: 'Unknown',
+  /**
+   * The code uses a dependency with a known vulnerability.
+   */
+  1: 'Dependency',
+  /**
+   * The code contains a secret that has now been compromised and must be revoked.
+   */
+  2: 'Secret',
+  /**
+   * The code contains a weakness determined by static analysis.
+   */
+  3: 'Code',
+};
+
+export const AlertState = {
+  /**
+   * Alert is in an indeterminate state
+   */
+  0: 'Unknown',
+  /**
+   * Alert has been detected in the code
+   */
+  1: 'Active',
+  /**
+   * Alert was dismissed by a user
+   */
+  2: 'Dismissed',
+  /**
+   * The issue is no longer detected in the code
+   */
+  4: 'Fixed',
+  /**
+   * The tool has determined that the issue is no longer a risk
+   */
+  8: 'AutoDismissed',
+};
+
+export const AlertSeverity = {
+  0: 'Low',
+  1: 'Medium',
+  2: 'High',
+  3: 'Critical',
+  4: 'Note',
+  5: 'Warning',
+  6: 'Error',
 };
 
 export const Steps = {
@@ -48,6 +100,8 @@ export const Steps = {
   FETCH_USERS: 'fetch-users',
   BUILD_USER_REVIEWED_PR_RELATIONSHIP: 'build-user-reviewd-pr-relationship',
   BUILD_USER_APPROVED_PR_RELATIONSHIP: 'build-user-approved-pr-relationship',
+  FETCH_ALERTS: 'fetch-alerts',
+  BUILD_REPO_ALERT_RELATIONSHIP: 'build-repo-alert-relationship',
 };
 
 export const Entities: Record<
@@ -58,7 +112,8 @@ export const Entities: Record<
   | 'PIPELINE_ENTITY'
   | 'PULL_REQUEST_ENTITY'
   | 'REPOSITORY_ENTITY'
-  | 'USER_ENTITY',
+  | 'USER_ENTITY'
+  | 'ALERT_ENTITY',
   StepEntityMetadata
 > = {
   DEVOPS_SERVICE_ENTITY: {
@@ -101,6 +156,11 @@ export const Entities: Record<
     _type: 'azure_devops_user',
     _class: 'User',
   },
+  ALERT_ENTITY: {
+    resourceName: 'Azure DevOps Alerts',
+    _type: 'azure_devops_alert_finding',
+    _class: 'Finding',
+  },
 };
 
 export const Relationships: Record<
@@ -116,7 +176,8 @@ export const Relationships: Record<
   | 'ACCOUNT_OWNS_REPO'
   | 'USER_OPENED_PR'
   | 'USER_REVIEWED_PR'
-  | 'USER_APPROVED_PR',
+  | 'USER_APPROVED_PR'
+  | 'REPO_HAS_ALERTS',
   StepRelationshipMetadata
 > = {
   ACCOUNT_HAS_USERS: {
@@ -196,6 +257,12 @@ export const Relationships: Record<
     _class: RelationshipClass.APPROVED,
     sourceType: Entities.USER_ENTITY._type,
     targetType: Entities.PULL_REQUEST_ENTITY._type,
+  },
+  REPO_HAS_ALERTS: {
+    _type: 'azure_devops_repo_has_alert_finding',
+    _class: RelationshipClass.HAS,
+    sourceType: Entities.REPOSITORY_ENTITY._type,
+    targetType: Entities.ALERT_ENTITY._type,
   },
 };
 

@@ -84,6 +84,7 @@ The following entities are created:
 | ADO Team               | `azure_devops_team`           | `UserGroup`     |
 | ADO User               | `azure_devops_user`           | `User`          |
 | ADO WorkItem           | `azure_devops_work_item`      | `Record`        |
+| Azure DevOps Alerts    | `azure_devops_alert_finding`  | `Finding`       |
 | Azure Devops Account   | `azure_devops_account`        | `Account`       |
 | AzureBuildSettings     | `azure_devops_build_settings` | `Configuration` |
 | AzureDevOps            | `azure_devops`                | `Service`       |
@@ -109,6 +110,7 @@ The following relationships are created:
 | `azure_devops_project` | **USES**              | `azure_devops_repo`           |
 | `azure_devops_project` | **HAS**               | `azure_devops_team`           |
 | `azure_devops_project` | **HAS**               | `azure_devops_work_item`      |
+| `azure_devops_repo`    | **HAS**               | `azure_devops_alert_finding`  |
 | `azure_devops_repo`    | **HAS**               | `azure_devops_pr`             |
 | `azure_devops_team`    | **HAS**               | `azure_devops_user`           |
 | `azure_devops_user`    | **MANAGES**           | `azure_devops_account`        |

@@ -9,6 +9,7 @@ import { environmentSteps } from './environments';
 import { buildSettingSteps } from './buildSettings';
 import { devopsServiceSteps } from './devopsService';
 import { pullRequestStep } from './pullRequest';
+import { alertSteps } from './alerts';
 
 const integrationSteps = [
   ...accountSteps,
@@ -22,6 +23,7 @@ const integrationSteps = [
   ...buildSettingSteps,
   ...devopsServiceSteps,
   ...pullRequestStep,
+  ...alertSteps,
 ];
 
 export { integrationSteps };
