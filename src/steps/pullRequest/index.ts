@@ -62,7 +62,7 @@ export async function fetchRepositories({
   const apiClient = createAPIClient(instance.config);
 
   await jobState.iterateEntities(
-    { _type: Entities.REPOSITORY_ENTITY._type },
+    { _type: 'azure_devops_repo' },
     async (repositoryEntity) => {
       const projectId = repositoryEntity?.projectId;
       const repoId = repositoryEntity.id;

@@ -102,6 +102,7 @@ export const Steps = {
   BUILD_USER_APPROVED_PR_RELATIONSHIP: 'build-user-approved-pr-relationship',
   FETCH_ALERTS: 'fetch-alerts',
   BUILD_REPO_ALERT_RELATIONSHIP: 'build-repo-alert-relationship',
+  FETCH_ENVIRONMENTS: 'fetch-environments',
 };
 
 export const Entities: Record<
@@ -113,7 +114,8 @@ export const Entities: Record<
   | 'PULL_REQUEST_ENTITY'
   | 'REPOSITORY_ENTITY'
   | 'USER_ENTITY'
-  | 'ALERT_ENTITY',
+  | 'ALERT_ENTITY'
+  | 'ENVIRONMENT_ENTITY',
   StepEntityMetadata
 > = {
   DEVOPS_SERVICE_ENTITY: {
@@ -124,42 +126,47 @@ export const Entities: Record<
   PROJECT_ENTITY: {
     resourceName: 'ADO Project',
     _type: 'azure_devops_project',
-    _class: 'Project',
+    _class: ['Project'],
   },
   ACCOUNT_ENTITY: {
     resourceName: 'Azure Devops Account',
     _type: 'azure_devops_account',
-    _class: 'Account',
+    _class: ['Account'],
   },
   BUILD_SETTING_ENTITY: {
     resourceName: 'AzureBuildSettings',
     _type: 'azure_devops_build_settings',
-    _class: 'Configuration',
+    _class: ['Configuration'],
   },
   PIPELINE_ENTITY: {
     resourceName: 'AzureDevOpsPipeline',
     _type: 'azure_devops_pipeline',
-    _class: 'Workflow',
+    _class: ['Workflow'],
   },
   PULL_REQUEST_ENTITY: {
     resourceName: 'AzureDevOpsPullRequest',
     _type: 'azure_devops_pr',
-    _class: 'PR',
+    _class: ['PR'],
   },
   REPOSITORY_ENTITY: {
     resourceName: 'Repository',
     _type: 'azure_devops_repo',
-    _class: 'Repository',
+    _class: ['Repository'],
   },
   USER_ENTITY: {
     resourceName: 'ADO User',
     _type: 'azure_devops_user',
-    _class: 'User',
+    _class: ['User'],
   },
   ALERT_ENTITY: {
     resourceName: 'Azure DevOps Alerts',
     _type: 'azure_devops_alert_finding',
-    _class: 'Finding',
+    _class: ['Finding'],
+  },
+  ENVIRONMENT_ENTITY: {
+    resourceName: 'Environments',
+    _type: 'azure_devops_environment',
+    _class: ['Configuration'],
   },
 };
 

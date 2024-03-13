@@ -96,7 +96,7 @@ export const teamSteps: IntegrationStep<ADOIntegrationConfig>[] = [
       {
         resourceName: 'ADO Team',
         _type: 'azure_devops_team',
-        _class: 'UserGroup',
+        _class: ['UserGroup'],
       },
     ],
     relationships: [

@@ -12,14 +12,8 @@ import { ADOIntegrationConfig } from '../../types';
 import { EnvironmentInstance } from 'azure-devops-node-api/interfaces/TaskAgentInterfaces';
 import { Entities, Steps } from '../constant';
 
-const ENVIRONMENT_ENTITY = {
-  resourceName: 'Environments',
-  _type: 'azure_devops_environment',
-  _class: 'Configuration',
-};
-
 function getEnvironmentKey(environmentId): string {
-  return `${ENVIRONMENT_ENTITY._type}:${environmentId}`;
+  return `${Entities.ENVIRONMENT_ENTITY._type}:${environmentId}`;
 }
 
 function createEnvironmentEntity(environment: EnvironmentInstance): Entity {
@@ -28,8 +22,8 @@ function createEnvironmentEntity(environment: EnvironmentInstance): Entity {
       source: environment,
       assign: {
         _key: getEnvironmentKey(environment.id),
-        _type: ENVIRONMENT_ENTITY._type,
-        _class: ENVIRONMENT_ENTITY._class,
+        _type: Entities.ENVIRONMENT_ENTITY._type,
+        _class: Entities.ENVIRONMENT_ENTITY._class,
         id: String(environment.id),
         name: environment.name,
         projectId: environment.project?.id,
@@ -75,9 +69,9 @@ export async function fetchEnvironment({
 
 export const environmentSteps: IntegrationStep<ADOIntegrationConfig>[] = [
   {
-    id: 'fetch-environment',
+    id: Steps.FETCH_ENVIRONMENTS,
     name: 'Fetch Environment',
-    entities: [ENVIRONMENT_ENTITY],
+    entities: [Entities.ENVIRONMENT_ENTITY],
     relationships: [], // TODO : create relationship
     dependsOn: [Steps.FETCH_PROJECTS],
     executionHandler: fetchEnvironment,

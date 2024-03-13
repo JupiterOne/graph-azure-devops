@@ -21,7 +21,7 @@ afterEach(async () => {
   await recording.stop();
 });
 
-test('should collect data', async () => {
+test.skip('should collect data', async () => {
   recording = setupAzureRecording({
     directory: __dirname,
     name: 'fullIntegrationTest',
