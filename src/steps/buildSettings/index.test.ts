@@ -27,5 +27,5 @@ describe(Steps.FETCH_BUILD_SETTINGS, () => {
     const stepConfig = buildStepTestConfigForStep(Steps.FETCH_BUILD_SETTINGS);
     const stepResult = await executeStepWithDependencies(stepConfig);
     expect(stepResult).toMatchStepMetadata(stepConfig);
-  }, 110000);
+  }, 100000);
 });
