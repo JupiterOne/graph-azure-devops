@@ -146,7 +146,7 @@ export async function buildUserReviewedPRRelationship({
       const reviewers: string[] =
         (pullRequestEntity.reviewers as string[]) || [];
 
-      for (let reviewer of reviewers) {
+      for (const reviewer of reviewers) {
         const [reviewerId, vote] = reviewer.split(':').slice(0, 2);
         const userKey = getUserKey(reviewerId);
         if (jobState.hasKey(userKey)) {
@@ -181,7 +181,7 @@ export async function buildUserApprovedPRRelationship({
       const reviewers: string[] =
         (pullRequestEntity.reviewers as string[]) || [];
 
-      for (let reviewer of reviewers) {
+      for (const reviewer of reviewers) {
         const [reviewerId, vote] = reviewer.split(':').slice(0, 2);
         const userKey = getUserKey(reviewerId);
         if (jobState.hasKey(userKey)) {

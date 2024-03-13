@@ -69,7 +69,7 @@ export async function fetchRepositories({
               },
             });
 
-            if (!(await jobState.hasKey(relationship._key))) {
+            if (!jobState.hasKey(relationship._key)) {
               await jobState.addRelationship(relationship);
             }
           } else {
@@ -90,7 +90,7 @@ export async function fetchRepositories({
               },
             });
 
-            if (!(await jobState.hasKey(repositoryEntity._key))) {
+            if (!jobState.hasKey(repositoryEntity._key)) {
               await jobState.addEntity(repositoryEntity);
 
               await jobState.addRelationship(

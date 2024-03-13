@@ -308,8 +308,8 @@ export class APIClient {
 
     const pullRequests = await getPullRequests(gitApi, projectId, repoId);
 
-    for (let pullRequest of pullRequests || []) {
-      iteratee(pullRequest);
+    for (const pullRequest of pullRequests || []) {
+      await iteratee(pullRequest);
     }
   }
 
@@ -332,8 +332,8 @@ export class APIClient {
       logger,
     )) as Alert[];
 
-    for (let alert of alerts || []) {
-      iteratee(alert);
+    for (const alert of alerts || []) {
+      await iteratee(alert);
     }
   }
 }
