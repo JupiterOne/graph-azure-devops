@@ -110,7 +110,7 @@ describe('APIClient', () => {
   });
 
   describe('iterateWorkitems', () => {
-    test.skip('success', async () => {
+    test('success', async () => {
       recording = setupAzureRecording({
         directory: __dirname,
         name: 'APIClient.iterateWorkItems::success',
