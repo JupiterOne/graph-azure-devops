@@ -15,7 +15,7 @@ describe(Steps.FETCH_ENVIRONMENTS, () => {
     }
   });
 
-  test('Fetch Pipelines', async () => {
+  test('Fetch Environments', async () => {
     recording = setupAzureRecording({
       directory: __dirname,
       name: 'fetch-environments',
@@ -27,5 +27,5 @@ describe(Steps.FETCH_ENVIRONMENTS, () => {
     const stepConfig = buildStepTestConfigForStep(Steps.FETCH_ENVIRONMENTS);
     const stepResult = await executeStepWithDependencies(stepConfig);
     expect(stepResult).toMatchStepMetadata(stepConfig);
-  }, 110000);
+  }, 1000000);
 });

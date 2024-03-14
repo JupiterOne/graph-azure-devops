@@ -7,7 +7,7 @@ import { setupAzureRecording } from '../../../test/recording';
 import { buildStepTestConfigForStep, config } from '../../../test/config';
 import { getMatchRequestsBy } from '../../../test/getMatchRequestsBy';
 
-describe(Steps.FETCH_SERVICE, () => {
+describe('should be able to create Service entity and relationship', () => {
   let recording: Recording;
   afterEach(async () => {
     if (recording) {
@@ -18,7 +18,7 @@ describe(Steps.FETCH_SERVICE, () => {
   test('Fetch Service', async () => {
     recording = setupAzureRecording({
       directory: __dirname,
-      name: 'fetch-service',
+      name: 'fetch-devops-service',
       options: {
         matchRequestsBy: getMatchRequestsBy({ config: config }),
       },
@@ -27,5 +27,5 @@ describe(Steps.FETCH_SERVICE, () => {
     const stepConfig = buildStepTestConfigForStep(Steps.FETCH_SERVICE);
     const stepResult = await executeStepWithDependencies(stepConfig);
     expect(stepResult).toMatchStepMetadata(stepConfig);
-  }, 110000);
+  }, 100000);
 });

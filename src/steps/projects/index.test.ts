@@ -15,7 +15,7 @@ describe(Steps.FETCH_PROJECTS, () => {
     }
   });
 
-  test('Fetch Pipelines', async () => {
+  test('Fetch Projects', async () => {
     recording = setupAzureRecording({
       directory: __dirname,
       name: 'fetch-projects',

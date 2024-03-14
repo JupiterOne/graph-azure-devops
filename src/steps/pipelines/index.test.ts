@@ -27,5 +27,21 @@ describe(Steps.FETCH_PIPELINE, () => {
     const stepConfig = buildStepTestConfigForStep(Steps.FETCH_PIPELINE);
     const stepResult = await executeStepWithDependencies(stepConfig);
     expect(stepResult).toMatchStepMetadata(stepConfig);
-  }, 110000);
+  }, 100000);
+
+  test('BUILD PROJECT PIPELINE RELATIONSHIP', async () => {
+    recording = setupAzureRecording({
+      directory: __dirname,
+      name: 'build-project-pipeline-relationship',
+      options: {
+        matchRequestsBy: getMatchRequestsBy({ config: config }),
+      },
+    });
+
+    const stepConfig = buildStepTestConfigForStep(
+      Steps.BUILD_PROJECT_PIPELINE_RELATIONSHIP,
+    );
+    const stepResult = await executeStepWithDependencies(stepConfig);
+    expect(stepResult).toMatchStepMetadata(stepConfig);
+  }, 100000);
 });
