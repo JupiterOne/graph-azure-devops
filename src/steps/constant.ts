@@ -162,6 +162,11 @@ export const Entities: Record<
     resourceName: 'Azure DevOps Alerts',
     _type: 'azure_devops_alert_finding',
     _class: ['Finding'],
+    schema: {
+      properties: {
+        category: { type: 'string' },
+      },
+    },
   },
   ENVIRONMENT_ENTITY: {
     resourceName: 'Environments',

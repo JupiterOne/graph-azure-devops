@@ -15,17 +15,35 @@ describe(Steps.FETCH_ALERTS, () => {
     }
   });
 
-  test.skip('Fetch Alerts', async () => {
+  test('Fetch Alerts', async () => {
     recording = setupAzureRecording({
       directory: __dirname,
       name: 'fetch-alerts',
       options: {
         matchRequestsBy: getMatchRequestsBy({ config: config }),
+        recordFailedRequests: true,
       },
     });
 
     const stepConfig = buildStepTestConfigForStep(Steps.FETCH_ALERTS);
     const stepResult = await executeStepWithDependencies(stepConfig);
     expect(stepResult).toMatchStepMetadata(stepConfig);
-  }, 1100000);
+  }, 1000000);
+
+  test('Buils Repo Alerts Relationship ', async () => {
+    recording = setupAzureRecording({
+      directory: __dirname,
+      name: 'build-alert-repo-relationship',
+      options: {
+        matchRequestsBy: getMatchRequestsBy({ config: config }),
+        recordFailedRequests: true,
+      },
+    });
+
+    const stepConfig = buildStepTestConfigForStep(
+      Steps.BUILD_REPO_ALERT_RELATIONSHIP,
+    );
+    const stepResult = await executeStepWithDependencies(stepConfig);
+    expect(stepResult).toMatchStepMetadata(stepConfig);
+  }, 1000000);
 });

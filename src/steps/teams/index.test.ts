@@ -26,5 +26,5 @@ describe('fetch-teams', () => {
     const stepConfig = buildStepTestConfigForStep('fetch-teams');
     const stepResult = await executeStepWithDependencies(stepConfig);
     expect(stepResult).toMatchStepMetadata(stepConfig);
-  }, 110000);
+  }, 100000);
 });
