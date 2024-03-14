@@ -242,7 +242,7 @@ export const pullRequestStep: IntegrationStep<ADOIntegrationConfig>[] = [
   },
   {
     id: Steps.BUILD_USER_APPROVED_PR_RELATIONSHIP,
-    name: 'Build User Reviewed PR Relationship',
+    name: 'Build User Approved PR Relationship',
     entities: [],
     relationships: [Relationships.USER_APPROVED_PR],
     dependsOn: [Steps.FETCH_USERS, Steps.FETCH_PULL_REQUEST],
