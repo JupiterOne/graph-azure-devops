@@ -1,0 +1,118 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fetchWorkItems Should create user entities and relationships: assignedRelationships 1`] = `
+[
+  {
+    "_class": "ASSIGNED",
+    "_fromEntityKey": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+    "_key": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc|assigned|af58e917-ee45-445b-bfb7-7850a53fcf211",
+    "_toEntityKey": "af58e917-ee45-445b-bfb7-7850a53fcf211",
+    "_type": "azure_devops_user_assigned_work_item",
+    "displayName": "ASSIGNED",
+  },
+]
+`;
+
+exports[`fetchWorkItems Should create user entities and relationships: createdRelationships 1`] = `
+[
+  {
+    "_class": "CREATED",
+    "_fromEntityKey": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+    "_key": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc|created|af58e917-ee45-445b-bfb7-7850a53fcf211",
+    "_toEntityKey": "af58e917-ee45-445b-bfb7-7850a53fcf211",
+    "_type": "azure_devops_user_created_work_item",
+    "displayName": "CREATED",
+  },
+]
+`;
+
+exports[`fetchWorkItems Should create user entities and relationships: hasRelationships 1`] = `
+[
+  {
+    "_class": "HAS",
+    "_fromEntityKey": "af58e917-ee45-445b-bfb7-7850a53fcf21",
+    "_key": "af58e917-ee45-445b-bfb7-7850a53fcf21|has|af58e917-ee45-445b-bfb7-7850a53fcf211",
+    "_toEntityKey": "af58e917-ee45-445b-bfb7-7850a53fcf211",
+    "_type": "azure_devops_project_has_work_item",
+    "displayName": "HAS",
+  },
+]
+`;
+
+exports[`fetchWorkItems Should create user entities and relationships: workItemEntities 1`] = `
+[
+  {
+    "_class": [
+      "Record",
+    ],
+    "_key": "af58e917-ee45-445b-bfb7-7850a53fcf211",
+    "_rawData": [
+      {
+        "name": "default",
+        "rawData": {
+          "fields": {
+            "Microsoft.VSTS.Common.Priority": 2,
+            "Microsoft.VSTS.Common.StateChangeDate": "2024-03-14T14:35:53.323Z",
+            "System.AreaId": 8,
+            "System.AreaLevel1": "Project2",
+            "System.AreaPath": "Project2",
+            "System.AssignedTo": "metron <metron@j1AzureIntegrationDev.onmicrosoft.com>",
+            "System.AttachedFileCount": 0,
+            "System.AuthorizedAs": "metron <metron@j1AzureIntegrationDev.onmicrosoft.com>",
+            "System.AuthorizedDate": "2024-03-14T15:20:53.2Z",
+            "System.ChangedBy": "metron <metron@j1AzureIntegrationDev.onmicrosoft.com>",
+            "System.ChangedDate": "2024-03-14T15:20:53.2Z",
+            "System.CommentCount": 0,
+            "System.CreatedBy": "metron <metron@j1AzureIntegrationDev.onmicrosoft.com>",
+            "System.CreatedDate": "2024-03-14T14:35:53.323Z",
+            "System.ExternalLinkCount": 0,
+            "System.HyperLinkCount": 0,
+            "System.Id": 1,
+            "System.IterationId": 5,
+            "System.IterationLevel1": "Project2",
+            "System.IterationPath": "Project2",
+            "System.NodeName": "Project2",
+            "System.PersonId": 246753397,
+            "System.Reason": "Added to backlog",
+            "System.RelatedLinkCount": 0,
+            "System.RemoteLinkCount": 0,
+            "System.Rev": 2,
+            "System.RevisedDate": "9999-01-01T00:00:00Z",
+            "System.State": "To Do",
+            "System.TeamProject": "Project2",
+            "System.Title": "test workitem",
+            "System.Watermark": 2,
+            "System.WorkItemType": "Epic",
+          },
+          "id": 1,
+          "projectId": "af58e917-ee45-445b-bfb7-7850a53fcf21",
+          "rev": 2,
+        },
+      },
+    ],
+    "_type": "azure_devops_work_item",
+    "areaPath": "Project2",
+    "changedBy": "metron <metron@j1AzureIntegrationDev.onmicrosoft.com>",
+    "changedDate": "2024-03-14T15:20:53.2Z",
+    "commentCount": 0,
+    "createdDate": "2024-03-14T14:35:53.323Z",
+    "createdOn": undefined,
+    "description": undefined,
+    "displayName": "test workitem",
+    "history": undefined,
+    "interationPath": "Project2",
+    "name": "test workitem",
+    "priority": 2,
+    "projectId": "af58e917-ee45-445b-bfb7-7850a53fcf21",
+    "projectName": "Project2",
+    "reason": "Added to backlog",
+    "revision": 2,
+    "state": "To Do",
+    "stateChangeDate": "2024-03-14T14:35:53.323Z",
+    "teamProject": "Project2",
+    "type": "Epic",
+    "webLink": undefined,
+    "workItemType": "Epic",
+  },
+]
+`;
