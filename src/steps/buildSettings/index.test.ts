@@ -28,4 +28,20 @@ describe(Steps.FETCH_BUILD_SETTINGS, () => {
     const stepResult = await executeStepWithDependencies(stepConfig);
     expect(stepResult).toMatchStepMetadata(stepConfig);
   }, 100000);
+
+  test('build relationship project-buildSetting', async () => {
+    recording = setupAzureRecording({
+      directory: __dirname,
+      name: 'build-project-build-setting-relationship',
+      options: {
+        matchRequestsBy: getMatchRequestsBy({ config: config }),
+      },
+    });
+
+    const stepConfig = buildStepTestConfigForStep(
+      Steps.BUILD_PROJECT_BUILD_SETTING_RELATIONSHIP,
+    );
+    const stepResult = await executeStepWithDependencies(stepConfig);
+    expect(stepResult).toMatchStepMetadata(stepConfig);
+  }, 100000);
 });
