@@ -6,6 +6,8 @@ import {
   StepRelationshipMetadata,
 } from '@jupiterone/integration-sdk-core';
 
+export const unit_test_custom_timout = 100000;
+
 export const PullRequestStatus = {
   /**
    * Status not set. Default state.
