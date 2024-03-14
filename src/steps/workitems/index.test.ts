@@ -15,7 +15,7 @@ import { ADOIntegrationConfig } from '../../types';
 import { fetchAccountDetails } from '../account';
 import { fetchProjects } from '../projects';
 import { fetchUsers, UNIQUE_NAME_TO_USER_ID_MAPPING_PREFIX } from '../users';
-import { Entities } from '../constant';
+import { Entities, unit_test_custom_timout } from '../constant';
 
 let recording: Recording;
 
@@ -56,32 +56,37 @@ async function setupFetchWorkItemsContext(): Promise<
 }
 
 describe('fetchWorkItems', () => {
-  it.skip('Should create user entities and relationships', async () => {
-    recording = setupAzureRecording({
-      directory: __dirname,
-      name: 'fetchWorkItems',
-      options: {
-        matchRequestsBy: getMatchRequestsBy({ config: config }),
-      },
-    });
+  it(
+    'Should create user entities and relationships',
+    async () => {
+      recording = setupAzureRecording({
+        directory: __dirname,
+        name: 'fetchWorkItems',
+        options: {
+          matchRequestsBy: getMatchRequestsBy({ config: config }),
+        },
+      });
 
-    const context = await setupFetchWorkItemsContext();
-    await fetchWorkItems(context);
+      const context = await setupFetchWorkItemsContext();
+      await fetchWorkItems(context);
 
-    const workItemEntities = context.jobState.collectedEntities;
-    testEntities(workItemEntities, 'workItemEntities');
-    const createdRelationships = context.jobState.collectedRelationships.filter(
-      (r) => r._class === RelationshipClass.CREATED,
-    );
-    testRelationships(createdRelationships, 'createdRelationships');
-    const assignedRelationships =
-      context.jobState.collectedRelationships.filter(
-        (r) => r._class === RelationshipClass.ASSIGNED,
+      const workItemEntities = context.jobState.collectedEntities;
+      testEntities(workItemEntities, 'workItemEntities');
+      const createdRelationships =
+        context.jobState.collectedRelationships.filter(
+          (r) => r._class === RelationshipClass.CREATED,
+        );
+      testRelationships(createdRelationships, 'createdRelationships');
+      const assignedRelationships =
+        context.jobState.collectedRelationships.filter(
+          (r) => r._class === RelationshipClass.ASSIGNED,
+        );
+      testRelationships(assignedRelationships, 'assignedRelationships');
+      const hasRelationships = context.jobState.collectedRelationships.filter(
+        (r) => r._class === RelationshipClass.HAS,
       );
-    testRelationships(assignedRelationships, 'assignedRelationships');
-    const hasRelationships = context.jobState.collectedRelationships.filter(
-      (r) => r._class === RelationshipClass.HAS,
-    );
-    testRelationships(hasRelationships, 'hasRelationships');
-  });
+      testRelationships(hasRelationships, 'hasRelationships');
+    },
+    unit_test_custom_timout,
+  );
 });
