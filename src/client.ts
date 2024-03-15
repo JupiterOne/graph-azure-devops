@@ -57,7 +57,7 @@ export class APIClient {
       this.config.accessToken,
       this.config.orgUrl,
     );
-    await getCoreApi(connection); //the authen will fail on this line if accessToken is bad and throw an err
+    await getAzureDevOpsApi(connection, 'core'); //the authen will fail on this line if accessToken is bad and throw an err
   }
 
   /**
@@ -72,8 +72,15 @@ export class APIClient {
       this.config.accessToken,
       this.config.orgUrl,
     );
-    const core = await getCoreApi(connection);
-    const projects = await getProjects(core);
+    const core = (await getAzureDevOpsApi(connection, 'core')) as ICoreApi;
+
+    // construct api endpoint
+    const apiEndpoint = '_apis/projects';
+    const projects = await fetchDataFromAzureDevOps(
+      core,
+      'projects',
+      apiEndpoint,
+    );
     for (const proj of projects) {
       await iteratee(proj);
     }
@@ -92,13 +99,29 @@ export class APIClient {
       this.config.accessToken,
       this.config.orgUrl,
     );
-    const core = await getCoreApi(connection);
-    const allTeams: WebApiTeam[] = await getAllTeams(core);
+    const core = (await getAzureDevOpsApi(connection, 'core')) as ICoreApi;
+    // construct api endpoint
+    const apiEndpoint = '_apis/teams';
+    const allTeams: WebApiTeam[] = await fetchDataFromAzureDevOps(
+      core,
+      'teams',
+      apiEndpoint,
+    );
 
     //for every team, get all the users and make a list of uniques
     for (const team of allTeams) {
       if (team.projectId && team.id) {
-        const teamMembers = await getTeamMembers(core, team.projectId, team.id);
+        // construct api endpoint
+        const apiEndpoint = `/projects/${team.projectId}/teams/${team.id}/members`;
+        // fetch team members
+        const teamMembers = await fetchDataFromAzureDevOps(
+          core,
+          'team-members',
+          apiEndpoint,
+          team.projectId,
+          undefined,
+          team.id,
+        );
         for (const teamMember of teamMembers) {
           if (
             teamMember.identity?.id &&
@@ -129,15 +152,33 @@ export class APIClient {
       this.config.accessToken,
       this.config.orgUrl,
     );
-    const core = await getCoreApi(connection);
-    const allTeams: WebApiTeam[] = await getAllTeams(core);
+    const core = (await getAzureDevOpsApi(connection, 'core')) as ICoreApi;
+    // construct api endpoint
+    const apiEndpoint = '_apis/teams';
+    const allTeams: WebApiTeam[] = await fetchDataFromAzureDevOps(
+      core,
+      'teams',
+      apiEndpoint,
+    );
 
     //for every team, put all the team member ids in array users
     for (const team of allTeams) {
       if (team.projectId && team.id) {
         const group: ADOGroup = team;
         group.users = [];
-        const teamMembers = await getTeamMembers(core, team.projectId, team.id);
+
+        // construct api endpoint
+        const apiEndpoint = `/projects/${team.projectId}/teams/${team.id}/members`;
+        // fetch team members
+        const teamMembers = await fetchDataFromAzureDevOps(
+          core,
+          'team-members',
+          apiEndpoint,
+          team.projectId,
+          undefined,
+          team.id,
+        );
+
         for (const teamMember of teamMembers) {
           if (teamMember.identity?.id !== undefined) {
             const userId = { id: teamMember.identity?.id };
@@ -162,8 +203,14 @@ export class APIClient {
       this.config.accessToken,
       this.config.orgUrl,
     );
-    const core = await getCoreApi(connection);
-    const projects: TeamProjectReference[] = await getProjects(core);
+    // construct api endpoint
+    const apiEndpoint = '_apis/projects';
+    const core = (await getAzureDevOpsApi(connection, 'core')) as ICoreApi;
+    const projects: TeamProjectReference[] = await fetchDataFromAzureDevOps(
+      core,
+      'projects',
+      apiEndpoint,
+    );
 
     try {
       //for every project, get the latest version of each workitem
@@ -191,7 +238,7 @@ export class APIClient {
         }
       }
     } catch (err) {
-      if (err.message.includes('connect ETIMEDOUT')) {
+      if (isRetryableError(err)) {
         return await this.iterateWorkitems(iteratee);
       }
       throw new IntegrationProviderAuthenticationError({
@@ -222,8 +269,16 @@ export class APIClient {
       this.config.orgUrl,
     );
 
-    const gitApi = await getGitAPI(connection);
-    const Repos = await getRepos(gitApi, projectId);
+    const gitApi = (await getAzureDevOpsApi(connection, 'git')) as IGitApi;
+
+    // construct api endpoint
+    const apiEndpoint = `${projectId}/_apis/git/repositories`;
+    const Repos = await fetchDataFromAzureDevOps(
+      gitApi,
+      'repos',
+      apiEndpoint,
+      projectId,
+    );
 
     for (const repo of Repos || []) {
       await iteratee(repo);
@@ -244,8 +299,19 @@ export class APIClient {
       this.config.orgUrl,
     );
 
-    const buildApi = await getBuildApi(connection);
-    const pipelines = await getBuildPipelines(buildApi, projectId);
+    const buildApi = (await getAzureDevOpsApi(
+      connection,
+      'build',
+    )) as IBuildApi;
+
+    // construct api endpoint
+    const apiEndpoint = `${projectId}/_apis/pipelines`;
+    const pipelines = await fetchDataFromAzureDevOps(
+      buildApi,
+      'build-pipelines',
+      apiEndpoint,
+      projectId,
+    );
 
     for (const pipeline of pipelines || []) {
       await iteratee(pipeline);
@@ -265,8 +331,20 @@ export class APIClient {
       this.config.accessToken,
       this.config.orgUrl,
     );
-    const taskAgentApi = await getTaskAgentApi(connection);
-    const environments = await getEnvironments(taskAgentApi, projectId);
+    const taskAgentApi = (await getAzureDevOpsApi(
+      connection,
+      'taskAgent',
+    )) as ITaskAgentApi;
+
+    // construct api endpoint
+    const apiEndpoint = `${projectId}/_apis/pipelines/environments`;
+
+    const environments = await fetchDataFromAzureDevOps(
+      taskAgentApi,
+      'environments',
+      apiEndpoint,
+      projectId,
+    );
     for (const environment of environments || []) {
       await iteratee(environment);
     }
@@ -285,9 +363,17 @@ export class APIClient {
       this.config.accessToken,
       this.config.orgUrl,
     );
-    const buildApi = await getBuildApi(connection);
-    const buildGeneralSettings = await getBuildGeneralSettings(
+    const buildApi = (await getAzureDevOpsApi(
+      connection,
+      'build',
+    )) as IBuildApi;
+
+    // construct api endpoint
+    const apiEndpoint = `${projectId}/_apis/build/generalsettings`;
+    const buildGeneralSettings = await fetchDataFromAzureDevOps(
       buildApi,
+      'build-general-settings',
+      apiEndpoint,
       projectId,
     );
     await iteratee(buildGeneralSettings);
@@ -307,9 +393,18 @@ export class APIClient {
       this.config.accessToken,
       this.config.orgUrl,
     );
-    const gitApi = await getGitAPI(connection);
+    const gitApi = (await getAzureDevOpsApi(connection, 'git')) as IGitApi;
 
-    const pullRequests = await getPullRequests(gitApi, projectId, repoId);
+    // construct api endpoint
+    const apiEndpoint = `${projectId}/_apis/git/repositories/${repoId}/pullrequests`;
+
+    const pullRequests = await fetchDataFromAzureDevOps(
+      gitApi,
+      'pull-requests',
+      apiEndpoint,
+      projectId,
+      repoId,
+    );
 
     for (const pullRequest of pullRequests || []) {
       await iteratee(pullRequest);
@@ -326,12 +421,21 @@ export class APIClient {
       this.config.accessToken,
       this.config.orgUrl,
     );
-    const alertApi = await getAlertAPI(connection);
+    const alertApi = (await getAzureDevOpsApi(
+      connection,
+      'alert',
+    )) as IAlertApi;
 
-    const alerts = (await getAlerts(
+    // construct api endpoint
+    const apiEndpoint = `${projectId}/_apis/alert/repositories/${repoId}/alerts`;
+
+    const alerts = (await fetchDataFromAzureDevOps(
       alertApi,
+      'alerts',
+      apiEndpoint,
       projectId,
       repoId,
+      undefined,
       logger,
     )) as Alert[];
 
@@ -341,10 +445,22 @@ export class APIClient {
   }
 }
 
+/**
+ * Creates an instance of the Azure DevOps API client based on the provided configuration.
+ * @param {ADOIntegrationConfig} config - Configuration object containing necessary parameters for creating the client.
+ * @returns {APIClient} - An instance of the Azure DevOps API client.
+ */
 export function createAPIClient(config: ADOIntegrationConfig): APIClient {
   return new APIClient(config);
 }
 
+/**
+ * Establishes a connection to the Azure DevOps organization using the provided access token and organization URL.
+ * @param {string} accessToken - The personal access token used for authentication.
+ * @param {string} orgUrl - The URL of the Azure DevOps organization.
+ * @returns {azdev.WebApi} - An instance of the Azure DevOps WebApi representing the connection.
+ * @throws {IntegrationProviderAuthenticationError} - If there's an error while establishing the connection, an IntegrationProviderAuthenticationError is thrown.
+ */
 function getConnection(accessToken: string, orgUrl: string) {
   try {
     const authHandler = azdev.getPersonalAccessTokenHandler(accessToken);
@@ -359,15 +475,30 @@ function getConnection(accessToken: string, orgUrl: string) {
   }
 }
 
-async function getCoreApi(connection: azdev.WebApi) {
+/**
+ * Retrieves the Azure DevOps API based on the provided connection and API type.
+ * @param {azdev.WebApi} connection - The Azure DevOps connection object.
+ * @param {string} apiType - The type of API to retrieve. Can be one of: 'core', 'build', 'alert', 'taskAgent', or 'git'.
+ * @returns {Promise<any>} - A promise that resolves to the requested Azure DevOps API.
+ * @throws {IntegrationProviderAuthenticationError} - If there's an error while retrieving the API, an IntegrationProviderAuthenticationError is thrown.
+ */
+async function getAzureDevOpsApi(connection: azdev.WebApi, apiType: string) {
   try {
-    return await connection.getCoreApi();
+    switch (apiType) {
+      case 'core':
+        return await connection.getCoreApi();
+      case 'build':
+        return await connection.getBuildApi();
+      case 'alert':
+        return await connection.getAlertApi();
+      case 'taskAgent':
+        return await connection.getTaskAgentApi();
+      case 'git':
+        return await connection.getGitApi();
+      default:
+        throw new Error('Invalid API type provided');
+    }
   } catch (err) {
-    /**
-     * The ADO client does not expose status / status message clearly. We used
-     * tests to understand the expected behavior when calling this API with
-     * various invalid arguments (see client.test.ts)
-     */
     let status: number | undefined = undefined;
     let statusText: string | undefined = undefined;
     if (err.message === "Cannot read property 'value' of null") {
@@ -376,268 +507,98 @@ async function getCoreApi(connection: azdev.WebApi) {
     }
     throw new IntegrationProviderAuthenticationError({
       cause: err,
-      endpoint: connection.serverUrl + '/_apis/Location',
+      endpoint: connection.serverUrl + `/_apis/${apiType}`,
       status: status || err.statusCode,
       statusText: statusText || err.message,
     });
   }
 }
 
-async function getBuildApi(connection: azdev.WebApi) {
-  try {
-    return await connection.getBuildApi();
-  } catch (err) {
-    /**
-     * The ADO client does not expose status / status message clearly. We used
-     * tests to understand the expected behavior when calling this API with
-     * various invalid arguments (see client.test.ts)
-     */
-    let status: number | undefined = undefined;
-    let statusText: string | undefined = undefined;
-    if (err.message === "Cannot read property 'value' of null") {
-      status = 404;
-      statusText = 'Not Found';
-    }
-    throw new IntegrationProviderAuthenticationError({
-      cause: err,
-      endpoint: connection.serverUrl + '/_apis/Location',
-      status: status || err.statusCode,
-      statusText: statusText || err.message,
-    });
-  }
+/**
+ * Checks if the given error is retryable based on its properties.
+ * @param {any} err - The error object to check for retryability.
+ * @returns {boolean} - True if the error is retryable, false otherwise.
+ */
+function isRetryableError(err: any): boolean {
+  return (
+    err.message.includes('connect ETIMEDOUT') ||
+    err.statusCode === 429 ||
+    (err.statusCode >= 500 && err.statusCode < 600)
+  );
 }
 
-async function getAlertAPI(connection: azdev.WebApi) {
-  try {
-    return await connection.getAlertApi();
-  } catch (err) {
-    /**
-     * The ADO client does not expose status / status message clearly. We used
-     * tests to understand the expected behavior when calling this API with
-     * various invalid arguments (see client.test.ts)
-     */
-    let status: number | undefined = undefined;
-    let statusText: string | undefined = undefined;
-    if (err.message === "Cannot read property 'value' of null") {
-      status = 404;
-      statusText = 'Not Found';
-    }
-    throw new IntegrationProviderAuthenticationError({
-      cause: err,
-      endpoint: connection.serverUrl + '/_apis/Location',
-      status: status || err.statusCode,
-      statusText: statusText || err.message,
-    });
-  }
-}
-
-async function getTaskAgentApi(connection: azdev.WebApi) {
-  try {
-    return await connection.getTaskAgentApi();
-  } catch (err) {
-    /**
-     * The ADO client does not expose status / status message clearly. We used
-     * tests to understand the expected behavior when calling this API with
-     * various invalid arguments (see client.test.ts)
-     */
-    let status: number | undefined = undefined;
-    let statusText: string | undefined = undefined;
-    if (err.message === "Cannot read property 'value' of null") {
-      status = 404;
-      statusText = 'Not Found';
-    }
-    throw new IntegrationProviderAuthenticationError({
-      cause: err,
-      endpoint: connection.serverUrl + '/_apis/Location',
-      status: status || err.statusCode,
-      statusText: statusText || err.message,
-    });
-  }
-}
-
-async function getGitAPI(connection: azdev.WebApi) {
-  try {
-    return await connection.getGitApi();
-  } catch (err) {
-    /**
-     * The ADO client does not expose status / status message clearly. We used
-     * tests to understand the expected behavior when calling this API with
-     * various invalid arguments (see client.test.ts)
-     */
-    let status: number | undefined = undefined;
-    let statusText: string | undefined = undefined;
-    if (err.message === "Cannot read property 'value' of null") {
-      status = 404;
-      statusText = 'Not Found';
-    }
-    throw new IntegrationProviderAuthenticationError({
-      cause: err,
-      endpoint: connection.serverUrl + '/_apis/Location',
-      status: status || err.statusCode,
-      statusText: statusText || err.message,
-    });
-  }
-}
-
-async function getProjects(core: ICoreApi) {
-  try {
-    return await core.getProjects();
-  } catch (err) {
-    if (err.message.includes('connect ETIMEDOUT')) {
-      return await getProjects(core);
-    } else {
-      throw new IntegrationProviderAuthenticationError({
-        cause: err,
-        endpoint: core.baseUrl + '_apis/projects',
-        status: err.statusCode,
-        statusText: err.message,
-      });
-    }
-  }
-}
-
-async function getAllTeams(core: ICoreApi) {
-  try {
-    return await core.getAllTeams();
-  } catch (err) {
-    throw new IntegrationProviderAuthenticationError({
-      cause: err,
-      endpoint: core.baseUrl + '_apis/teams',
-      status: err.statusCode,
-      statusText: err.message,
-    });
-  }
-}
-
-async function getTeamMembers(
-  core: ICoreApi,
-  projectId: string,
-  teamId: string,
+/**
+ * Fetches data from Azure DevOps API based on the specified data type and API endpoint.
+ * @param {any} api - The Azure DevOps API object used for making requests.
+ * @param {string} dataType - The type of data to fetch. Supported values are: 'projects', 'teams', 'team-members', 'repos', 'build-pipelines', 'environments', 'build-general-settings', 'pull-requests', and 'alerts'.
+ * @param {string} apiEndpoint - The endpoint of the API to fetch data from.
+ * @param {string} [projectId] - The ID of the project associated with the data (required for certain data types).
+ * @param {string} [repoId] - The ID of the repository associated with the data (required for 'pull-requests' and 'alerts').
+ * @param {string} [teamId] - The ID of the team associated with the data (required for 'team-members').
+ * @param {IntegrationLogger} [logger] - Optional logger for logging warning.
+ * @returns {Promise<any>} - A promise that resolves to the fetched data.
+ * @throws {IntegrationProviderAuthenticationError} - If there's an error while fetching data from the API, an IntegrationProviderAuthenticationError is thrown.
+ */
+async function fetchDataFromAzureDevOps(
+  api,
+  dataType: string,
+  apiEndpoint: string,
+  projectId?: string,
+  repoId?: string,
+  teamId?: string,
+  logger?: IntegrationLogger,
 ) {
   try {
-    return await core.getTeamMembersWithExtendedProperties(projectId, teamId);
-  } catch (err) {
-    throw new IntegrationProviderAuthenticationError({
-      cause: err,
-      endpoint: core.baseUrl + `/projects/${projectId}/teams/${teamId}/members`,
-      status: err.statusCode,
-      statusText: err.message,
-    });
-  }
-}
-
-async function getRepos(gitApi: IGitApi, projectId: string) {
-  try {
-    return await gitApi.getRepositories(projectId);
-  } catch (err) {
-    throw new IntegrationProviderAuthenticationError({
-      cause: err,
-      endpoint: gitApi.baseUrl + `${projectId}/_apis/git/repositories`,
-      status: err.statusCode,
-      statusText: err.message,
-    });
-  }
-}
-
-async function getBuildPipelines(build: IBuildApi, projectId: string) {
-  try {
-    return await build.getDefinitions(projectId);
-  } catch (err) {
-    if (err.message.includes('connect ETIMEDOUT')) {
-      return getBuildPipelines(build, projectId);
-    } else {
-      throw new IntegrationProviderAuthenticationError({
-        cause: err,
-        endpoint: build.baseUrl + `${projectId}/_apis/pipelines`,
-        status: err.statusCode,
-        statusText: err.message,
-      });
+    switch (dataType) {
+      case 'projects':
+        return await api.getProjects();
+      case 'teams':
+        return await api.getAllTeams();
+      case 'team-members':
+        return await api.getTeamMembersWithExtendedProperties(
+          projectId,
+          teamId,
+        );
+      case 'repos':
+        return await api.getRepositories(projectId);
+      case 'build-pipelines':
+        return await api.getDefinitions(projectId);
+      case 'environments':
+        return await api.getEnvironments(projectId);
+      case 'build-general-settings':
+        return await api.getBuildGeneralSettings(projectId);
+      case 'pull-requests':
+        return await api.getPullRequests(repoId, {}, projectId);
+      case 'alerts':
+        return await api.getAlerts(projectId, repoId);
+      default:
+        throw new Error('Invalid API provided');
     }
-  }
-}
-
-async function getEnvironments(taskAgentApi: ITaskAgentApi, projectId: string) {
-  try {
-    return await taskAgentApi.getEnvironments(projectId);
   } catch (err) {
-    if (err.message.includes('connect ETIMEDOUT')) {
-      return getEnvironments(taskAgentApi, projectId);
-    } else {
-      throw new IntegrationProviderAuthenticationError({
-        cause: err,
-        endpoint:
-          taskAgentApi.baseUrl + `${projectId}/_apis/pipelines/environments`,
-        status: err.statusCode,
-        statusText: err.message,
-      });
-    }
-  }
-}
-
-async function getBuildGeneralSettings(build: IBuildApi, projectId: string) {
-  try {
-    return await build.getBuildGeneralSettings(projectId);
-  } catch (err) {
-    if (err.message.includes('connect ETIMEDOUT')) {
-      return getBuildGeneralSettings(build, projectId);
-    } else {
-      throw new IntegrationProviderAuthenticationError({
-        cause: err,
-        endpoint: build.baseUrl + `${projectId}/_apis/build/generalsettings`,
-        status: err.statusCode,
-        statusText: err.message,
-      });
-    }
-  }
-}
-
-async function getPullRequests(
-  gitApi: IGitApi,
-  projectId: string,
-  repoId: string,
-) {
-  try {
-    return await gitApi.getPullRequests(repoId, {}, projectId);
-  } catch (err) {
-    if (err.message.includes('connect ETIMEDOUT')) {
-      return getPullRequests(gitApi, projectId, repoId);
-    } else {
-      throw new IntegrationProviderAuthenticationError({
-        cause: err,
-        endpoint:
-          gitApi.baseUrl +
-          `${projectId}/_apis/git/repositories/${repoId}/pullrequests`,
-        status: err.statusCode,
-        statusText: err.message,
-      });
-    }
-  }
-}
-
-async function getAlerts(
-  alertApi: IAlertApi,
-  projectId: string,
-  repoId: string,
-  logger: IntegrationLogger,
-) {
-  try {
-    return await alertApi.getAlerts(projectId, repoId);
-  } catch (err) {
-    if (err.message.includes('connect ETIMEDOUT')) {
-      return getAlerts(alertApi, projectId, repoId, logger);
+    if (isRetryableError(err)) {
+      return await fetchDataFromAzureDevOps(
+        api,
+        dataType,
+        apiEndpoint,
+        projectId,
+        repoId,
+        teamId,
+        logger,
+      );
     } else if (
+      dataType === 'alerts' &&
       err.message.includes(
         'Advanced Security is not enabled for this repository.',
       )
     ) {
-      logger.warn(`Advanced Security is not enabled for ${repoId} repository.`);
+      logger?.warn(
+        `Advanced Security is not enabled for ${repoId} repository.`,
+      );
       return [];
     } else {
       throw new IntegrationProviderAuthenticationError({
         cause: err,
-        endpoint:
-          alertApi.baseUrl +
-          `${projectId}/_apis/alert/repositories/${repoId}/alerts`,
+        endpoint: `${api.baseUrl}${apiEndpoint}`,
         status: err.statusCode,
         statusText: err.message,
       });
