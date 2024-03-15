@@ -32,4 +32,24 @@ describe(Steps.FETCH_ENVIRONMENTS, () => {
     },
     unit_test_custom_timout,
   );
+
+  test(
+    'BUILD PROJECT Environment RELATIONSHIP',
+    async () => {
+      recording = setupAzureRecording({
+        directory: __dirname,
+        name: 'build-project-environment-relationship',
+        options: {
+          matchRequestsBy: getMatchRequestsBy({ config: config }),
+        },
+      });
+
+      const stepConfig = buildStepTestConfigForStep(
+        Steps.BUILD_PROJECT_ENVIRONMENT_RELATIONSHIP,
+      );
+      const stepResult = await executeStepWithDependencies(stepConfig);
+      expect(stepResult).toMatchStepMetadata(stepConfig);
+    },
+    unit_test_custom_timout,
+  );
 });

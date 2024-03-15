@@ -191,6 +191,9 @@ export class APIClient {
         }
       }
     } catch (err) {
+      if (err.message.includes('connect ETIMEDOUT')) {
+        return await this.iterateWorkitems(iteratee);
+      }
       throw new IntegrationProviderAuthenticationError({
         cause: err,
         endpoint:
@@ -480,12 +483,16 @@ async function getProjects(core: ICoreApi) {
   try {
     return await core.getProjects();
   } catch (err) {
-    throw new IntegrationProviderAuthenticationError({
-      cause: err,
-      endpoint: core.baseUrl + '_apis/projects',
-      status: err.statusCode,
-      statusText: err.message,
-    });
+    if (err.message.includes('connect ETIMEDOUT')) {
+      return await getProjects(core);
+    } else {
+      throw new IntegrationProviderAuthenticationError({
+        cause: err,
+        endpoint: core.baseUrl + '_apis/projects',
+        status: err.statusCode,
+        statusText: err.message,
+      });
+    }
   }
 }
 

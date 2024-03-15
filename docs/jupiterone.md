@@ -106,6 +106,7 @@ The following relationships are created:
 | `azure_devops_account` | **HAS**               | `azure_devops_team`           |
 | `azure_devops_account` | **HAS**               | `azure_devops_user`           |
 | `azure_devops_project` | **HAS**               | `azure_devops_build_settings` |
+| `azure_devops_project` | **HAS**               | `azure_devops_environment`    |
 | `azure_devops_project` | **HAS**               | `azure_devops_pipeline`       |
 | `azure_devops_project` | **USES**              | `azure_devops_repo`           |
 | `azure_devops_project` | **HAS**               | `azure_devops_team`           |

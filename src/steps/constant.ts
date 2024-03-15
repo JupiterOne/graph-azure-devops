@@ -105,6 +105,8 @@ export const Steps = {
   FETCH_ALERTS: 'fetch-alerts',
   BUILD_REPO_ALERT_RELATIONSHIP: 'build-repo-alert-relationship',
   FETCH_ENVIRONMENTS: 'fetch-environments',
+  BUILD_PROJECT_ENVIRONMENT_RELATIONSHIP:
+    'build-project-environment-relationship',
 };
 
 export const Entities: Record<
@@ -191,7 +193,8 @@ export const Relationships: Record<
   | 'USER_OPENED_PR'
   | 'USER_REVIEWED_PR'
   | 'USER_APPROVED_PR'
-  | 'REPO_HAS_ALERTS',
+  | 'REPO_HAS_ALERTS'
+  | 'PROJECT_HAS_ENVIRONMENT',
   StepRelationshipMetadata
 > = {
   ACCOUNT_HAS_USERS: {
@@ -277,6 +280,12 @@ export const Relationships: Record<
     _class: RelationshipClass.HAS,
     sourceType: Entities.REPOSITORY_ENTITY._type,
     targetType: Entities.ALERT_ENTITY._type,
+  },
+  PROJECT_HAS_ENVIRONMENT: {
+    _type: 'azure_devops_project_has_environment',
+    _class: RelationshipClass.HAS,
+    sourceType: Entities.PROJECT_ENTITY._type,
+    targetType: Entities.ENVIRONMENT_ENTITY._type,
   },
 };
 
