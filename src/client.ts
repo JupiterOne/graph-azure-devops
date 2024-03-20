@@ -269,19 +269,25 @@ export class APIClient {
       this.config.orgUrl,
     );
 
-    const gitApi = (await getAzureDevOpsApi(connection, 'git')) as IGitApi;
+    const buildApi = (await getAzureDevOpsApi(
+      connection,
+      'build',
+    )) as IBuildApi;
 
     // construct api endpoint
-    const apiEndpoint = `${projectId}/_apis/git/repositories`;
-    const Repos = await fetchDataFromAzureDevOps(
-      gitApi,
+    const apiEndpoint = `${projectId}/_apis/build`;
+    const builds = await fetchDataFromAzureDevOps(
+      buildApi,
       'repos',
       apiEndpoint,
       projectId,
     );
 
-    for (const repo of Repos || []) {
-      await iteratee(repo);
+    for (const build of builds || []) {
+      const { repository } = build;
+      if (repository) {
+        await iteratee(repository);
+      }
     }
   }
 
@@ -461,7 +467,7 @@ export function createAPIClient(config: ADOIntegrationConfig): APIClient {
  * @returns {azdev.WebApi} - An instance of the Azure DevOps WebApi representing the connection.
  * @throws {IntegrationProviderAuthenticationError} - If there's an error while establishing the connection, an IntegrationProviderAuthenticationError is thrown.
  */
-function getConnection(accessToken: string, orgUrl: string) {
+function getConnection(accessToken: string, orgUrl: string): azdev.WebApi {
   try {
     const authHandler = azdev.getPersonalAccessTokenHandler(accessToken);
     return new azdev.WebApi(orgUrl, authHandler);
@@ -482,7 +488,10 @@ function getConnection(accessToken: string, orgUrl: string) {
  * @returns {Promise<any>} - A promise that resolves to the requested Azure DevOps API.
  * @throws {IntegrationProviderAuthenticationError} - If there's an error while retrieving the API, an IntegrationProviderAuthenticationError is thrown.
  */
-async function getAzureDevOpsApi(connection: azdev.WebApi, apiType: string) {
+async function getAzureDevOpsApi(
+  connection: azdev.WebApi,
+  apiType: string,
+): Promise<any> {
   try {
     switch (apiType) {
       case 'core':
@@ -540,14 +549,14 @@ function isRetryableError(err: any): boolean {
  * @throws {IntegrationProviderAuthenticationError} - If there's an error while fetching data from the API, an IntegrationProviderAuthenticationError is thrown.
  */
 async function fetchDataFromAzureDevOps(
-  api,
+  api: any,
   dataType: string,
   apiEndpoint: string,
   projectId?: string,
   repoId?: string,
   teamId?: string,
   logger?: IntegrationLogger,
-) {
+): Promise<any> {
   try {
     switch (dataType) {
       case 'projects':
@@ -560,7 +569,7 @@ async function fetchDataFromAzureDevOps(
           teamId,
         );
       case 'repos':
-        return await api.getRepositories(projectId);
+        return await api.getBuilds(projectId);
       case 'build-pipelines':
         return await api.getDefinitions(projectId);
       case 'environments':
