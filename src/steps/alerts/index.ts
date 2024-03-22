@@ -36,9 +36,9 @@ function createAlertEntity(alert: Alert, repoId): Entity {
         _type: Entities.ALERT_ENTITY._type,
         _class: Entities.ALERT_ENTITY._class,
         id: String(alert.alertId),
-        category: alert.alertType ? AlertType[alert.alertType] : undefined,
-        status: alert.state ? AlertState[alert.state] : undefined,
-        severity: alert.severity ? AlertSeverity[alert.severity] : undefined,
+        category: alert.alertType ? AlertType[alert.alertType] : 'Unknown',
+        status: alert.state ? AlertState[alert.state] : 'Unknown',
+        severity: alert.severity ? AlertSeverity[alert.severity] : 'Unknown',
         numericSeverity: alert.severity,
         gitRef: alert.gitRef,
         open: alert.state == 1, // state 1 = active

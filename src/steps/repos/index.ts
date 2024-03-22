@@ -150,7 +150,7 @@ export const repositorySteps: IntegrationStep<ADOIntegrationConfig>[] = [
   },
   {
     id: Steps.BUILD_ACCONT_REPO_RELATIONSHIP,
-    name: 'Build Accont Repo Relationship',
+    name: 'Build Account Repo Relationship',
     entities: [],
     relationships: [Relationships.ACCOUNT_OWNS_REPO],
     dependsOn: [Steps.FETCH_ACCOUNT, Steps.FETCH_REPOSITORY],

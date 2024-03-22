@@ -88,7 +88,7 @@ export const devopsServiceSteps: IntegrationStep<ADOIntegrationConfig>[] = [
     id: Steps.FETCH_SERVICE,
     name: 'DevOps Service',
     entities: [Entities.DEVOPS_SERVICE_ENTITY],
-    relationships: [], // TODO: Create Relationship
+    relationships: [],
     dependsOn: [],
     executionHandler: createDevopsService,
   },
