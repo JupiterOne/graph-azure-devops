@@ -90,7 +90,7 @@ export async function buildProjectBuildSettingsRelationship({
 export const buildSettingSteps: IntegrationStep<ADOIntegrationConfig>[] = [
   {
     id: Steps.FETCH_BUILD_SETTINGS,
-    name: 'Fetch Build-Settings',
+    name: 'Fetch Build Settings',
     entities: [Entities.BUILD_SETTING_ENTITY],
     relationships: [],
     dependsOn: [Steps.FETCH_PROJECTS],
