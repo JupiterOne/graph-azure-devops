@@ -12,7 +12,7 @@ import { fetchWorkItems } from './workitems';
 import { fetchTeams } from './teams';
 import { fetchUsers } from './users';
 import { fetchAccountDetails } from './account';
-import { unit_test_custom_timout } from './constant';
+import { unit_test_custom_timeout } from './constant';
 
 jest.setTimeout(1000 * 60 * 1);
 
@@ -166,5 +166,5 @@ test(
       },
     });
   },
-  unit_test_custom_timout,
+  unit_test_custom_timeout,
 );

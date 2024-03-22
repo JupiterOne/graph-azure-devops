@@ -13,7 +13,7 @@ import { Recording, setupAzureRecording } from '../../../test/recording';
 import { getMatchRequestsBy } from '../../../test/getMatchRequestsBy';
 import { fetchAccountDetails } from '../account';
 import { fetchProjects } from '../projects';
-import { Entities, unit_test_custom_timout } from '../constant';
+import { Entities, unit_test_custom_timeout } from '../constant';
 
 let recording: Recording;
 afterEach(async () => {
@@ -83,5 +83,5 @@ test(
         ),
     ).toBe(true);
   },
-  unit_test_custom_timout,
+  unit_test_custom_timeout,
 );

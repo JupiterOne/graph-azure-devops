@@ -15,7 +15,7 @@ import { ADOIntegrationConfig } from '../../types';
 import { fetchAccountDetails } from '../account';
 import { fetchProjects } from '../projects';
 import { fetchUsers, UNIQUE_NAME_TO_USER_ID_MAPPING_PREFIX } from '../users';
-import { Entities, unit_test_custom_timout } from '../constant';
+import { Entities, unit_test_custom_timeout } from '../constant';
 
 let recording: Recording;
 
@@ -87,6 +87,6 @@ describe('fetchWorkItems', () => {
       );
       testRelationships(hasRelationships, 'hasRelationships');
     },
-    unit_test_custom_timout,
+    unit_test_custom_timeout,
   );
 });

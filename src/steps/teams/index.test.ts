@@ -5,7 +5,7 @@ import {
 import { setupAzureRecording } from '../../../test/recording';
 import { buildStepTestConfigForStep, config } from '../../../test/config';
 import { getMatchRequestsBy } from '../../../test/getMatchRequestsBy';
-import { unit_test_custom_timout } from '../constant';
+import { unit_test_custom_timeout } from '../constant';
 
 describe('fetch-teams', () => {
   let recording: Recording;
@@ -30,6 +30,6 @@ describe('fetch-teams', () => {
       const stepResult = await executeStepWithDependencies(stepConfig);
       expect(stepResult).toMatchStepMetadata(stepConfig);
     },
-    unit_test_custom_timout,
+    unit_test_custom_timeout,
   );
 });
