@@ -534,6 +534,17 @@ function isRetryableError(err: any): boolean {
   );
 }
 
+/**
+ * Fetches data from Azure DevOps API based on the specified data type and API endpoint.
+ * @param {any} api - The Azure DevOps API object used for making requests.
+ * @param {string} dataType - The type of data to fetch. Supported values are: 'projects', 'teams', 'team-members', 'repos', 'build-pipelines', 'environments', 'build-general-settings', 'pull-requests', and 'alerts'.
+ * @param {string} apiEndpoint - The endpoint of the API to fetch data from.
+ * @param {string} [projectId] - The ID of the project associated with the data (required for certain data types).
+ * @param {string} [repoId] - The ID of the repository associated with the data (required for 'pull-requests' and 'alerts').
+ * @param {string} [teamId] - The ID of the team associated with the data (required for 'team-members').
+ * @param {IntegrationLogger} [logger] - Optional logger for logging warning.
+ * @returns {Promise<any>} - A promise that resolves to the fetched data.
+ */
 async function fetchDataFromAzureDevOpsWithRetry(
   api: any,
   dataType: string,
