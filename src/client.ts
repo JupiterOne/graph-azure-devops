@@ -2,6 +2,7 @@ import {
   IntegrationLogger,
   IntegrationProviderAuthenticationError,
 } from '@jupiterone/integration-sdk-core';
+import { retry } from '@lifeomic/attempt';
 
 import { ADOIntegrationConfig } from './types';
 
@@ -76,7 +77,7 @@ export class APIClient {
 
     // construct api endpoint
     const apiEndpoint = '_apis/projects';
-    const projects = await fetchDataFromAzureDevOps(
+    const projects = await fetchDataFromAzureDevOpsWithRetry(
       core,
       'projects',
       apiEndpoint,
@@ -102,7 +103,7 @@ export class APIClient {
     const core = (await getAzureDevOpsApi(connection, 'core')) as ICoreApi;
     // construct api endpoint
     const apiEndpoint = '_apis/teams';
-    const allTeams: WebApiTeam[] = await fetchDataFromAzureDevOps(
+    const allTeams: WebApiTeam[] = await fetchDataFromAzureDevOpsWithRetry(
       core,
       'teams',
       apiEndpoint,
@@ -114,7 +115,7 @@ export class APIClient {
         // construct api endpoint
         const apiEndpoint = `/projects/${team.projectId}/teams/${team.id}/members`;
         // fetch team members
-        const teamMembers = await fetchDataFromAzureDevOps(
+        const teamMembers = await fetchDataFromAzureDevOpsWithRetry(
           core,
           'team-members',
           apiEndpoint,
@@ -155,7 +156,7 @@ export class APIClient {
     const core = (await getAzureDevOpsApi(connection, 'core')) as ICoreApi;
     // construct api endpoint
     const apiEndpoint = '_apis/teams';
-    const allTeams: WebApiTeam[] = await fetchDataFromAzureDevOps(
+    const allTeams: WebApiTeam[] = await fetchDataFromAzureDevOpsWithRetry(
       core,
       'teams',
       apiEndpoint,
@@ -170,7 +171,7 @@ export class APIClient {
         // construct api endpoint
         const apiEndpoint = `/projects/${team.projectId}/teams/${team.id}/members`;
         // fetch team members
-        const teamMembers = await fetchDataFromAzureDevOps(
+        const teamMembers = await fetchDataFromAzureDevOpsWithRetry(
           core,
           'team-members',
           apiEndpoint,
@@ -206,11 +207,8 @@ export class APIClient {
     // construct api endpoint
     const apiEndpoint = '_apis/projects';
     const core = (await getAzureDevOpsApi(connection, 'core')) as ICoreApi;
-    const projects: TeamProjectReference[] = await fetchDataFromAzureDevOps(
-      core,
-      'projects',
-      apiEndpoint,
-    );
+    const projects: TeamProjectReference[] =
+      await fetchDataFromAzureDevOpsWithRetry(core, 'projects', apiEndpoint);
 
     try {
       //for every project, get the latest version of each workitem
@@ -276,7 +274,7 @@ export class APIClient {
 
     // construct api endpoint
     const apiEndpoint = `${projectId}/_apis/build`;
-    const builds = await fetchDataFromAzureDevOps(
+    const builds = await fetchDataFromAzureDevOpsWithRetry(
       buildApi,
       'repos',
       apiEndpoint,
@@ -312,7 +310,7 @@ export class APIClient {
 
     // construct api endpoint
     const apiEndpoint = `${projectId}/_apis/pipelines`;
-    const pipelines = await fetchDataFromAzureDevOps(
+    const pipelines = await fetchDataFromAzureDevOpsWithRetry(
       buildApi,
       'build-pipelines',
       apiEndpoint,
@@ -345,7 +343,7 @@ export class APIClient {
     // construct api endpoint
     const apiEndpoint = `${projectId}/_apis/pipelines/environments`;
 
-    const environments = await fetchDataFromAzureDevOps(
+    const environments = await fetchDataFromAzureDevOpsWithRetry(
       taskAgentApi,
       'environments',
       apiEndpoint,
@@ -376,7 +374,7 @@ export class APIClient {
 
     // construct api endpoint
     const apiEndpoint = `${projectId}/_apis/build/generalsettings`;
-    const buildGeneralSettings = await fetchDataFromAzureDevOps(
+    const buildGeneralSettings = await fetchDataFromAzureDevOpsWithRetry(
       buildApi,
       'build-general-settings',
       apiEndpoint,
@@ -404,7 +402,7 @@ export class APIClient {
     // construct api endpoint
     const apiEndpoint = `${projectId}/_apis/git/repositories/${repoId}/pullrequests`;
 
-    const pullRequests = await fetchDataFromAzureDevOps(
+    const pullRequests = await fetchDataFromAzureDevOpsWithRetry(
       gitApi,
       'pull-requests',
       apiEndpoint,
@@ -435,7 +433,7 @@ export class APIClient {
     // construct api endpoint
     const apiEndpoint = `${projectId}/_apis/alert/repositories/${repoId}/alerts`;
 
-    const alerts = (await fetchDataFromAzureDevOps(
+    const alerts = (await fetchDataFromAzureDevOpsWithRetry(
       alertApi,
       'alerts',
       apiEndpoint,
@@ -536,6 +534,55 @@ function isRetryableError(err: any): boolean {
   );
 }
 
+async function fetchDataFromAzureDevOpsWithRetry(
+  api: any,
+  dataType: string,
+  apiEndpoint: string,
+  projectId?: string,
+  repoId?: string,
+  teamId?: string,
+  logger?: IntegrationLogger,
+): Promise<any> {
+  const nextDelay = {
+    value: 200,
+  };
+
+  const retryOptions = {
+    delay: 200,
+    maxAttempts: 5,
+    factor: 2,
+    handleError: (err) => {
+      const isErrorRetryable = isRetryableError(err);
+      if (isErrorRetryable) {
+        const retryAfterKey = Object.keys(err.response.headers || []).filter(
+          (hdrKey) => hdrKey.toLowerCase() === 'retry-after',
+        )[0];
+        if (retryAfterKey) {
+          const delay = +err.response.headers[retryAfterKey] || 100;
+          nextDelay.value = delay;
+        } else {
+          nextDelay.value *= retryOptions.factor || 2;
+        }
+      } else {
+        throw err;
+      }
+    },
+    calculateDelay: () => nextDelay.value,
+  };
+
+  return await retry(async () => {
+    return await fetchDataFromAzureDevOps(
+      api,
+      dataType,
+      apiEndpoint,
+      projectId,
+      repoId,
+      teamId,
+      logger,
+    );
+  }, retryOptions);
+}
+
 /**
  * Fetches data from Azure DevOps API based on the specified data type and API endpoint.
  * @param {any} api - The Azure DevOps API object used for making requests.
@@ -584,17 +631,7 @@ async function fetchDataFromAzureDevOps(
         throw new Error('Invalid API provided');
     }
   } catch (err) {
-    if (isRetryableError(err)) {
-      return await fetchDataFromAzureDevOps(
-        api,
-        dataType,
-        apiEndpoint,
-        projectId,
-        repoId,
-        teamId,
-        logger,
-      );
-    } else if (
+    if (
       dataType === 'alerts' &&
       err.message.includes(
         'Advanced Security is not enabled for this repository.',
