@@ -11,7 +11,8 @@ import { testEntities } from '../../../test/testEntities';
 import { testRelationships } from '../../../test/testRelationships';
 import { toArray } from '../../../test/toArray';
 import { ADOIntegrationConfig } from '../../types';
-import { AZURE_DEVOPS_ACCOUNT, fetchAccountDetails } from '../account';
+import { fetchAccountDetails } from '../account';
+import { Entities } from '../constant';
 
 let recording: Recording;
 
@@ -40,7 +41,7 @@ describe('fetchUsers', () => {
       entities: setupContext.jobState.collectedEntities,
       relationships: setupContext.jobState.collectedRelationships,
       setData: {
-        [AZURE_DEVOPS_ACCOUNT]: accountEntity,
+        [Entities.ACCOUNT_ENTITY._type]: accountEntity,
       },
     });
   }

@@ -29,14 +29,14 @@
     "prepack": "yarn build"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^8.22.0"
+    "@jupiterone/integration-sdk-core": "^12.2.2"
   },
   "devDependencies": {
-    "@jupiterone/integration-sdk-core": "^8.22.0",
-    "@jupiterone/integration-sdk-dev-tools": "^8.22.0",
-    "@jupiterone/integration-sdk-testing": "^8.22.0"
+    "@jupiterone/integration-sdk-core": "^12.2.2",
+    "@jupiterone/integration-sdk-dev-tools": "^12.2.2",
+    "@jupiterone/integration-sdk-testing": "^12.2.2"
   },
   "dependencies": {
-    "azure-devops-node-api": "^10.1.2"
+    "azure-devops-node-api": "^12.4.0"
   }
 }

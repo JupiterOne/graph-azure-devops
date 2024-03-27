@@ -78,30 +78,48 @@ https://github.com/JupiterOne/sdk/blob/main/docs/integrations/development.md
 
 The following entities are created:
 
-| Resources            | Entity `_type`           | Entity `_class` |
-| -------------------- | ------------------------ | --------------- |
-| ADO Project          | `azure_devops_project`   | `Project`       |
-| ADO Team             | `azure_devops_team`      | `UserGroup`     |
-| ADO User             | `azure_devops_user`      | `User`          |
-| ADO WorkItem         | `azure_devops_work_item` | `Record`        |
-| Azure Devops Account | `azure_devops_account`   | `Account`       |
-| Repository           | `azure_devops_repo`      | `Repository`    |
+| Resources              | Entity `_type`                | Entity `_class` |
+| ---------------------- | ----------------------------- | --------------- |
+| ADO Project            | `azure_devops_project`        | `Project`       |
+| ADO Team               | `azure_devops_team`           | `UserGroup`     |
+| ADO User               | `azure_devops_user`           | `User`          |
+| ADO WorkItem           | `azure_devops_work_item`      | `Record`        |
+| Azure DevOps Alerts    | `azure_devops_alert_finding`  | `Finding`       |
+| Azure Devops Account   | `azure_devops_account`        | `Account`       |
+| AzureBuildSettings     | `azure_devops_build_settings` | `Configuration` |
+| AzureDevOps            | `azure_devops`                | `Service`       |
+| AzureDevOpsPipeline    | `azure_devops_pipeline`       | `Workflow`      |
+| AzureDevOpsPullRequest | `azure_devops_pr`             | `PR`            |
+| Environments           | `azure_devops_environment`    | `Configuration` |
+| Repository             | `azure_devops_repo`           | `Repository`    |
 
 ### Relationships
 
 The following relationships are created:
 
-| Source Entity `_type`  | Relationship `_class` | Target Entity `_type`    |
-| ---------------------- | --------------------- | ------------------------ |
-| `azure_devops_account` | **HAS**               | `azure_devops_project`   |
-| `azure_devops_account` | **HAS**               | `azure_devops_team`      |
-| `azure_devops_account` | **HAS**               | `azure_devops_user`      |
-| `azure_devops_project` | **HAS**               | `azure_devops_team`      |
-| `azure_devops_project` | **HAS**               | `azure_devops_work_item` |
-| `azure_devops_project` | **USES**              | `azure_devops_repo`      |
-| `azure_devops_team`    | **HAS**               | `azure_devops_user`      |
-| `azure_devops_user`    | **ASSIGNED**          | `azure_devops_work_item` |
-| `azure_devops_user`    | **CREATED**           | `azure_devops_work_item` |
+| Source Entity `_type`  | Relationship `_class` | Target Entity `_type`         |
+| ---------------------- | --------------------- | ----------------------------- |
+| `azure_devops`         | **SCANS**             | `azure_devops_project`        |
+| `azure_devops_account` | **HAS**               | `azure_devops`                |
+| `azure_devops_account` | **HAS**               | `azure_devops_project`        |
+| `azure_devops_account` | **OWNS**              | `azure_devops_repo`           |
+| `azure_devops_account` | **HAS**               | `azure_devops_team`           |
+| `azure_devops_account` | **HAS**               | `azure_devops_user`           |
+| `azure_devops_project` | **HAS**               | `azure_devops_build_settings` |
+| `azure_devops_project` | **HAS**               | `azure_devops_environment`    |
+| `azure_devops_project` | **HAS**               | `azure_devops_pipeline`       |
+| `azure_devops_project` | **USES**              | `azure_devops_repo`           |
+| `azure_devops_project` | **HAS**               | `azure_devops_team`           |
+| `azure_devops_project` | **HAS**               | `azure_devops_work_item`      |
+| `azure_devops_repo`    | **HAS**               | `azure_devops_alert_finding`  |
+| `azure_devops_repo`    | **HAS**               | `azure_devops_pr`             |
+| `azure_devops_team`    | **HAS**               | `azure_devops_user`           |
+| `azure_devops_user`    | **MANAGES**           | `azure_devops_account`        |
+| `azure_devops_user`    | **APPROVED**          | `azure_devops_pr`             |
+| `azure_devops_user`    | **OPENED**            | `azure_devops_pr`             |
+| `azure_devops_user`    | **REVIEWED**          | `azure_devops_pr`             |
+| `azure_devops_user`    | **ASSIGNED**          | `azure_devops_work_item`      |
+| `azure_devops_user`    | **CREATED**           | `azure_devops_work_item`      |
 
 ### Mapped Relationships
 
@@ -109,6 +127,7 @@ The following mapped relationships are created:
 
 | Source Entity `_type`  | Relationship `_class` | Target Entity `_type` | Direction |
 | ---------------------- | --------------------- | --------------------- | --------- |
+| `azure_devops_project` | **USES**              | `*bitbucket_repo*`    | FORWARD   |
 | `azure_devops_project` | **USES**              | `*github_repo*`       | FORWARD   |
 
 <!--

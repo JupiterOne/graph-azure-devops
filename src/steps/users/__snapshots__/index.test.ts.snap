@@ -1,19 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`fetchUsers Should create user entities and relationships: userEntities 1`] = `
-Array [
-  Object {
-    "_class": Array [
+[
+  {
+    "_class": [
       "User",
     ],
     "_key": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
-    "_rawData": Array [
-      Object {
+    "_rawData": [
+      {
         "name": "default",
-        "rawData": Object {
-          "identity": Object {
-            "_links": Object {
-              "avatar": Object {
+        "rawData": {
+          "identity": {
+            "_links": {
+              "avatar": {
                 "href": "https://dev.azure.com/michaelknoedel/_apis/GraphProfile/MemberAvatars/aad.Njg3NTczODAtOTcxMi03YWU4LWFmNmItNGRmZWExZWM4Y2Fj",
               },
             },
@@ -33,7 +33,7 @@ Array [
     "descriptor": "aad.Njg3NTczODAtOTcxMi03YWU4LWFmNmItNGRmZWExZWM4Y2Fj",
     "displayName": "Michael Knoedel",
     "email": "michael.knoedel@jupiterone.com",
-    "emailDomain": Array [
+    "emailDomain": [
       "jupiterone.com",
     ],
     "imageLink": "https://dev.azure.com/michaelknoedel/_api/_common/identityImage?id=e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
@@ -46,14 +46,22 @@ Array [
 `;
 
 exports[`fetchUsers Should create user entities and relationships: userRelationships 1`] = `
-Array [
-  Object {
+[
+  {
     "_class": "HAS",
     "_fromEntityKey": "azure-devops-account:local-integration-instance",
     "_key": "azure-devops-account:local-integration-instance|has|e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
     "_toEntityKey": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
     "_type": "azure_devops_account_has_user",
     "displayName": "HAS",
+  },
+  {
+    "_class": "MANAGES",
+    "_fromEntityKey": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
+    "_key": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424|manages|azure-devops-account:local-integration-instance",
+    "_toEntityKey": "azure-devops-account:local-integration-instance",
+    "_type": "azure_devops_user_manages_account",
+    "displayName": "MANAGES",
   },
 ]
 `;
