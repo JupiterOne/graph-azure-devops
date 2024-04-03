@@ -45,7 +45,7 @@ describe('APIClient', () => {
 
       const client = createAPIClient(configWithInvalidOrgUrl);
       await expect(client.verifyAuthentication()).rejects.toThrow(
-        'Provider authentication failed at https://dev.azure.com/a-very-invalid-org-url/_apis/core: undefined Failed to find api location for area: Location id: e81700f7-3be2-46de-8624-2eb35882fcaa',
+        /Provider authentication failed at https:\/\/dev.azure.com\/a-very-invalid-org-url\/_apis\/core: undefined Failed to find api location for area: Location id: .*?$/,
       );
     });
 

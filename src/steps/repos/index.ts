@@ -128,7 +128,7 @@ export async function buildAccontRepoRelationship({
         );
       } else {
         throw new IntegrationMissingKeyError(
-          `Build-Account-Repo-Relationship: ${accountKey} Missing.`,
+          `Build Account Repo Relationship: ${accountKey} Missing.`,
         );
       }
     },
