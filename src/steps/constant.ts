@@ -8,48 +8,6 @@ import {
 
 export const unit_test_custom_timeout = 100000;
 
-export const PullRequestStatus = {
-  /**
-   * Status not set. Default state.
-   */
-  0: 'NotSet',
-  /**
-   * Pull request is active.
-   */
-  1: 'Active',
-  /**
-   * Pull request is abandoned.
-   */
-  2: 'Abandoned',
-  /**
-   * Pull request is completed.
-   */
-  3: 'Completed',
-  /**
-   * Used in pull request search criteria to include all statuses.
-   */
-  4: 'All',
-};
-
-export const AlertType = {
-  /**
-   * The code has an unspecified vulnerability type
-   */
-  0: 'Unknown',
-  /**
-   * The code uses a dependency with a known vulnerability.
-   */
-  1: 'Dependency',
-  /**
-   * The code contains a secret that has now been compromised and must be revoked.
-   */
-  2: 'Secret',
-  /**
-   * The code contains a weakness determined by static analysis.
-   */
-  3: 'Code',
-};
-
 export const AlertState = {
   /**
    * Alert is in an indeterminate state
@@ -97,7 +55,7 @@ export const Steps = {
   FETCH_PULL_REQUEST: 'fetch-pullrequests',
   FETCH_REPOSITORY: 'fetch-repositories',
   BUILD_REPO_PR_RELATIONSHIP: 'build-repo-pr-relationship',
-  BUILD_ACCONT_REPO_RELATIONSHIP: 'build-account-repo-relationship',
+  BUILD_ACCOUNT_REPO_RELATIONSHIP: 'build-account-repo-relationship',
   BUILD_USER_OPENED_PR_RELATIONSHIP: 'build-user-opened-pr-relationship',
   FETCH_USERS: 'fetch-users',
   BUILD_USER_REVIEWED_PR_RELATIONSHIP: 'build-user-reviewd-pr-relationship',

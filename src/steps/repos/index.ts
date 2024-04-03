@@ -108,7 +108,7 @@ export async function fetchRepositories({
   );
 }
 
-export async function buildAccontRepoRelationship({
+export async function buildAccountRepoRelationship({
   jobState,
   instance,
 }: IntegrationStepExecutionContext<ADOIntegrationConfig>) {
@@ -149,11 +149,11 @@ export const repositorySteps: IntegrationStep<ADOIntegrationConfig>[] = [
     executionHandler: fetchRepositories,
   },
   {
-    id: Steps.BUILD_ACCONT_REPO_RELATIONSHIP,
+    id: Steps.BUILD_ACCOUNT_REPO_RELATIONSHIP,
     name: 'Build Account Repo Relationship',
     entities: [],
     relationships: [Relationships.ACCOUNT_OWNS_REPO],
     dependsOn: [Steps.FETCH_ACCOUNT, Steps.FETCH_REPOSITORY],
-    executionHandler: buildAccontRepoRelationship,
+    executionHandler: buildAccountRepoRelationship,
   },
 ];
