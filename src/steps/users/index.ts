@@ -9,9 +9,13 @@ import {
 
 import { createAPIClient } from '../../client';
 import { ADOIntegrationConfig } from '../../types';
-import { AZURE_DEVOPS_ACCOUNT } from '../account';
+import { Entities, Relationships, Steps } from '../constant';
 
 export const UNIQUE_NAME_TO_USER_ID_MAPPING_PREFIX = 'UserUniqueName:';
+
+export function getUserKey(uniqueId) {
+  return uniqueId;
+}
 
 export async function fetchUsers({
   logger,
@@ -21,7 +25,7 @@ export async function fetchUsers({
   const apiClient = createAPIClient(instance.config);
 
   const accountEntity = (await jobState.getData(
-    AZURE_DEVOPS_ACCOUNT,
+    Entities.ACCOUNT_ENTITY._type,
   )) as Entity;
 
   await apiClient.iterateUsers(async (user) => {
@@ -34,9 +38,9 @@ export async function fetchUsers({
         entityData: {
           source: user,
           assign: {
-            _type: 'azure_devops_user',
-            _class: 'User',
-            _key: user.identity?.id,
+            _type: Entities.USER_ENTITY._type,
+            _class: Entities.USER_ENTITY._class,
+            _key: getUserKey(user.identity?.id),
             name: user.identity?.displayName,
             displayName: user.identity?.displayName,
             email: user.identity?.uniqueName,
@@ -64,29 +68,27 @@ export async function fetchUsers({
         to: userEntity,
       }),
     );
+
+    await jobState.addRelationship(
+      createDirectRelationship({
+        _class: RelationshipClass.MANAGES,
+        from: userEntity,
+        to: accountEntity,
+      }),
+    );
   });
 }
 
 export const userSteps: IntegrationStep<ADOIntegrationConfig>[] = [
   {
-    id: 'fetch-users',
+    id: Steps.FETCH_USERS,
     name: 'Fetch Users',
-    entities: [
-      {
-        resourceName: 'ADO User',
-        _type: 'azure_devops_user',
-        _class: 'User',
-      },
-    ],
+    entities: [Entities.USER_ENTITY],
     relationships: [
-      {
-        _type: 'azure_devops_account_has_user',
-        _class: RelationshipClass.HAS,
-        sourceType: 'azure_devops_account',
-        targetType: 'azure_devops_user',
-      },
+      Relationships.ACCOUNT_HAS_USERS,
+      Relationships.USERS_MANAGES_ACCOUNT,
     ],
-    dependsOn: ['fetch-account'],
+    dependsOn: [Steps.FETCH_ACCOUNT],
     executionHandler: fetchUsers,
   },
 ];

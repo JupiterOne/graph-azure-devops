@@ -8,6 +8,34 @@ and this project adheres to
 
 ## [Unreleased]
 
+## 2.1.0 - 2023-03-27
+
+### Added
+
+- Support for ingesting the following **new** resources
+
+- New relationships
+
+  - `azure_devops_project` **HAS** `azure_devops_build_settings`
+  - `azure_devops_project` **HAS** `azure_devops_environment`
+  - `azure_devops_project` **HAS** `azure_devops_pipeline`
+  - `azure_devops` **SCANS** `azure_devops_project`
+  - `azure_devops` **HAS** `azure_devops_account`
+  - `azure_devops_user` **REVIEWED** `azure_devops_pr`
+  - `azure_devops_user` **APPROVED** `azure_devops_pr`
+  - `azure_devops_user` **OPENED** `azure_devops_pr`
+  - `azure_devops_repo` **HAS** `azure_devops_pr`
+  - `azure_devops_repo` **HAS** `azure_devops_alert_finding`
+  - `azure_devops_account` **OWNS** `azure_devops_repo`
+
+- New entities
+  - `azure_devops_build_settings`
+  - `azure_devops_environment`
+  - `azure_devops_alert_finding`
+  - `azure_devops_pipeline`
+  - `azure_devops`
+  - `azure_devops_pr`
+
 ## 2.0.1 - 2022-11-10
 
 ### Fixed

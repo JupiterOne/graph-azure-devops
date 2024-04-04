@@ -1,17 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`should collect data 1`] = `
-Object {
-  "collectedEntities": Array [
-    Object {
-      "_class": Array [
+{
+  "collectedEntities": [
+    {
+      "_class": [
         "Account",
       ],
       "_key": "azure-devops-account:local-integration-instance",
-      "_rawData": Array [
-        Object {
+      "_rawData": [
+        {
           "name": "default",
-          "rawData": Object {
+          "rawData": {
             "id": "azure-devops",
             "name": "Azure Devops Account",
           },
@@ -23,21 +23,54 @@ Object {
       "id": "azure-devops",
       "name": "Azure Devops - Local Integration",
     },
-    Object {
-      "_class": Array [
+    {
+      "_class": [
         "Project",
       ],
-      "_key": "ec28b48e-62ee-443e-83a2-27e591f5c30a",
-      "_rawData": Array [
-        Object {
+      "_key": "45aa0afe-3038-4abc-8104-f1ec33cf9bc2",
+      "_rawData": [
+        {
           "name": "default",
-          "rawData": Object {
-            "id": "ec28b48e-62ee-443e-83a2-27e591f5c30a",
-            "lastUpdateTime": 2021-03-22T17:58:51.317Z,
-            "name": "Project One",
+          "rawData": {
+            "description": "Project created for testing",
+            "id": "45aa0afe-3038-4abc-8104-f1ec33cf9bc2",
+            "lastUpdateTime": 2024-03-13T04:04:38.160Z,
+            "name": "Test_Project",
+            "revision": 35,
+            "state": "wellFormed",
+            "url": "https://dev.azure.com/default/_apis/projects/45aa0afe-3038-4abc-8104-f1ec33cf9bc2",
+            "visibility": 0,
+          },
+        },
+      ],
+      "_type": "azure_devops_project",
+      "abbreviation": undefined,
+      "createdOn": undefined,
+      "description": "Project created for testing",
+      "displayName": "Test_Project",
+      "id": "45aa0afe-3038-4abc-8104-f1ec33cf9bc2",
+      "name": "Test_Project",
+      "revision": 35,
+      "state": "wellFormed",
+      "updatedOn": undefined,
+      "visibility": 0,
+      "webLink": "https://dev.azure.com/default/_apis/projects/45aa0afe-3038-4abc-8104-f1ec33cf9bc2",
+    },
+    {
+      "_class": [
+        "Project",
+      ],
+      "_key": "c9c4d8a4-01db-49b3-ae2d-97db0aa76fce",
+      "_rawData": [
+        {
+          "name": "default",
+          "rawData": {
+            "id": "c9c4d8a4-01db-49b3-ae2d-97db0aa76fce",
+            "lastUpdateTime": 2024-02-26T09:47:41.327Z,
+            "name": "TestProjectByMetron",
             "revision": 11,
             "state": "wellFormed",
-            "url": "https://dev.azure.com/michaelknoedel/_apis/projects/ec28b48e-62ee-443e-83a2-27e591f5c30a",
+            "url": "https://dev.azure.com/default/_apis/projects/c9c4d8a4-01db-49b3-ae2d-97db0aa76fce",
             "visibility": 0,
           },
         },
@@ -46,36 +79,143 @@ Object {
       "abbreviation": undefined,
       "createdOn": undefined,
       "description": undefined,
-      "displayName": "Project One",
-      "id": "ec28b48e-62ee-443e-83a2-27e591f5c30a",
-      "name": "Project One",
+      "displayName": "TestProjectByMetron",
+      "id": "c9c4d8a4-01db-49b3-ae2d-97db0aa76fce",
+      "name": "TestProjectByMetron",
       "revision": 11,
       "state": "wellFormed",
       "updatedOn": undefined,
       "visibility": 0,
-      "webLink": "https://dev.azure.com/michaelknoedel/_apis/projects/ec28b48e-62ee-443e-83a2-27e591f5c30a",
+      "webLink": "https://dev.azure.com/default/_apis/projects/c9c4d8a4-01db-49b3-ae2d-97db0aa76fce",
     },
-    Object {
-      "_class": Array [
+    {
+      "_class": [
+        "Project",
+      ],
+      "_key": "af58e917-ee45-445b-bfb7-7850a53fcf21",
+      "_rawData": [
+        {
+          "name": "default",
+          "rawData": {
+            "description": "Test project used in J1 integration created by metron team.",
+            "id": "af58e917-ee45-445b-bfb7-7850a53fcf21",
+            "lastUpdateTime": 2024-03-14T15:06:59.173Z,
+            "name": "Project2",
+            "revision": 36,
+            "state": "wellFormed",
+            "url": "https://dev.azure.com/default/_apis/projects/af58e917-ee45-445b-bfb7-7850a53fcf21",
+            "visibility": 0,
+          },
+        },
+      ],
+      "_type": "azure_devops_project",
+      "abbreviation": undefined,
+      "createdOn": undefined,
+      "description": "Test project used in J1 integration created by metron team.",
+      "displayName": "Project2",
+      "id": "af58e917-ee45-445b-bfb7-7850a53fcf21",
+      "name": "Project2",
+      "revision": 36,
+      "state": "wellFormed",
+      "updatedOn": undefined,
+      "visibility": 0,
+      "webLink": "https://dev.azure.com/default/_apis/projects/af58e917-ee45-445b-bfb7-7850a53fcf21",
+    },
+    {
+      "_class": [
+        "Project",
+      ],
+      "_key": "e193f7df-a2c4-4fed-b7b8-0456d9732b04",
+      "_rawData": [
+        {
+          "name": "default",
+          "rawData": {
+            "description": "test project",
+            "id": "e193f7df-a2c4-4fed-b7b8-0456d9732b04",
+            "lastUpdateTime": 2024-03-12T05:04:49.937Z,
+            "name": "testProject2",
+            "revision": 27,
+            "state": "wellFormed",
+            "url": "https://dev.azure.com/default/_apis/projects/e193f7df-a2c4-4fed-b7b8-0456d9732b04",
+            "visibility": 0,
+          },
+        },
+      ],
+      "_type": "azure_devops_project",
+      "abbreviation": undefined,
+      "createdOn": undefined,
+      "description": "test project",
+      "displayName": "testProject2",
+      "id": "e193f7df-a2c4-4fed-b7b8-0456d9732b04",
+      "name": "testProject2",
+      "revision": 27,
+      "state": "wellFormed",
+      "updatedOn": undefined,
+      "visibility": 0,
+      "webLink": "https://dev.azure.com/default/_apis/projects/e193f7df-a2c4-4fed-b7b8-0456d9732b04",
+    },
+    {
+      "_class": [
         "User",
       ],
-      "_key": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
-      "_rawData": Array [
-        Object {
+      "_key": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+      "_rawData": [
+        {
           "name": "default",
-          "rawData": Object {
-            "identity": Object {
-              "_links": Object {
-                "avatar": Object {
-                  "href": "https://dev.azure.com/michaelknoedel/_apis/GraphProfile/MemberAvatars/aad.Njg3NTczODAtOTcxMi03YWU4LWFmNmItNGRmZWExZWM4Y2Fj",
+          "rawData": {
+            "identity": {
+              "_links": {
+                "avatar": {
+                  "href": "https://dev.azure.com/metron0620/_apis/GraphProfile/MemberAvatars/aad.YTQ4N2FhZTItZDUwYi03YzA0LTkwZTEtZTIwZGNjM2RjOWNj",
                 },
               },
-              "descriptor": "aad.Njg3NTczODAtOTcxMi03YWU4LWFmNmItNGRmZWExZWM4Y2Fj",
-              "displayName": "Michael Knoedel",
-              "id": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
-              "imageUrl": "https://dev.azure.com/michaelknoedel/_api/_common/identityImage?id=e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
-              "uniqueName": "michael.knoedel@jupiterone.com",
-              "url": "https://spsprodcus5.vssps.visualstudio.com/Ae6472b42-435c-4da8-bb39-ae8a56ec4bbd/_apis/Identities/e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
+              "descriptor": "aad.YTQ4N2FhZTItZDUwYi03YzA0LTkwZTEtZTIwZGNjM2RjOWNj",
+              "displayName": "metron",
+              "id": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+              "imageUrl": "https://dev.azure.com/metron0620/_api/_common/identityImage?id=a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+              "uniqueName": "metron@j1AzureIntegrationDev.onmicrosoft.com",
+              "url": "https://spsprodcin2.vssps.visualstudio.com/A84189b9e-dd50-48a6-83a4-7ac8273359da/_apis/Identities/a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+            },
+            "isTeamAdmin": true,
+          },
+        },
+      ],
+      "_type": "azure_devops_user",
+      "active": true,
+      "createdOn": undefined,
+      "descriptor": "aad.YTQ4N2FhZTItZDUwYi03YzA0LTkwZTEtZTIwZGNjM2RjOWNj",
+      "displayName": "metron",
+      "email": "metron@j1AzureIntegrationDev.onmicrosoft.com",
+      "emailDomain": [
+        "j1AzureIntegrationDev.onmicrosoft.com",
+      ],
+      "imageLink": "https://dev.azure.com/metron0620/_api/_common/identityImage?id=a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+      "name": "metron",
+      "profileLink": undefined,
+      "username": "metron@j1AzureIntegrationDev.onmicrosoft.com",
+      "webLink": "https://spsprodcin2.vssps.visualstudio.com/A84189b9e-dd50-48a6-83a4-7ac8273359da/_apis/Identities/a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+    },
+    {
+      "_class": [
+        "User",
+      ],
+      "_key": "cf832e05-0302-649d-871e-b323227d6484",
+      "_rawData": [
+        {
+          "name": "default",
+          "rawData": {
+            "identity": {
+              "_links": {
+                "avatar": {
+                  "href": "https://dev.azure.com/metron0620/_apis/GraphProfile/MemberAvatars/aad.Y2Y4MzJlMDUtMDMwMi03NDlkLTg3MWUtYjMyMzIyN2Q2NDg0",
+                },
+              },
+              "descriptor": "aad.Y2Y4MzJlMDUtMDMwMi03NDlkLTg3MWUtYjMyMzIyN2Q2NDg0",
+              "displayName": "bharat.kumavat@metronlabs.com",
+              "id": "cf832e05-0302-649d-871e-b323227d6484",
+              "imageUrl": "https://dev.azure.com/metron0620/_api/_common/identityImage?id=cf832e05-0302-649d-871e-b323227d6484",
+              "uniqueName": "bharat.kumavat@metronlabs.com",
+              "url": "https://spsprodcin2.vssps.visualstudio.com/A84189b9e-dd50-48a6-83a4-7ac8273359da/_apis/Identities/cf832e05-0302-649d-871e-b323227d6484",
             },
           },
         },
@@ -83,37 +223,37 @@ Object {
       "_type": "azure_devops_user",
       "active": true,
       "createdOn": undefined,
-      "descriptor": "aad.Njg3NTczODAtOTcxMi03YWU4LWFmNmItNGRmZWExZWM4Y2Fj",
-      "displayName": "Michael Knoedel",
-      "email": "michael.knoedel@jupiterone.com",
-      "emailDomain": Array [
-        "jupiterone.com",
+      "descriptor": "aad.Y2Y4MzJlMDUtMDMwMi03NDlkLTg3MWUtYjMyMzIyN2Q2NDg0",
+      "displayName": "bharat.kumavat@metronlabs.com",
+      "email": "bharat.kumavat@metronlabs.com",
+      "emailDomain": [
+        "metronlabs.com",
       ],
-      "imageLink": "https://dev.azure.com/michaelknoedel/_api/_common/identityImage?id=e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
-      "name": "Michael Knoedel",
+      "imageLink": "https://dev.azure.com/metron0620/_api/_common/identityImage?id=cf832e05-0302-649d-871e-b323227d6484",
+      "name": "bharat.kumavat@metronlabs.com",
       "profileLink": undefined,
-      "username": "michael.knoedel@jupiterone.com",
-      "webLink": "https://spsprodcus5.vssps.visualstudio.com/Ae6472b42-435c-4da8-bb39-ae8a56ec4bbd/_apis/Identities/e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
+      "username": "bharat.kumavat@metronlabs.com",
+      "webLink": "https://spsprodcin2.vssps.visualstudio.com/A84189b9e-dd50-48a6-83a4-7ac8273359da/_apis/Identities/cf832e05-0302-649d-871e-b323227d6484",
     },
-    Object {
-      "_class": Array [
+    {
+      "_class": [
         "UserGroup",
       ],
-      "_key": "db0744c6-a6b2-46d5-a99d-b1a5152d7d9f",
-      "_rawData": Array [
-        Object {
+      "_key": "4df62211-0442-4b96-939d-017e5317236e",
+      "_rawData": [
+        {
           "name": "default",
-          "rawData": Object {
+          "rawData": {
             "description": "The default project team.",
-            "id": "db0744c6-a6b2-46d5-a99d-b1a5152d7d9f",
-            "identityUrl": "https://spsprodcus5.vssps.visualstudio.com/Ae6472b42-435c-4da8-bb39-ae8a56ec4bbd/_apis/Identities/db0744c6-a6b2-46d5-a99d-b1a5152d7d9f",
-            "name": "Project One Team",
-            "projectId": "ec28b48e-62ee-443e-83a2-27e591f5c30a",
-            "projectName": "Project One",
-            "url": "https://dev.azure.com/michaelknoedel/_apis/projects/ec28b48e-62ee-443e-83a2-27e591f5c30a/teams/db0744c6-a6b2-46d5-a99d-b1a5152d7d9f",
-            "users": Array [
-              Object {
-                "id": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
+            "id": "4df62211-0442-4b96-939d-017e5317236e",
+            "identityUrl": "https://spsprodcin2.vssps.visualstudio.com/A84189b9e-dd50-48a6-83a4-7ac8273359da/_apis/Identities/4df62211-0442-4b96-939d-017e5317236e",
+            "name": "Test_Project Team",
+            "projectId": "45aa0afe-3038-4abc-8104-f1ec33cf9bc2",
+            "projectName": "Test_Project",
+            "url": "https://dev.azure.com/default/_apis/projects/45aa0afe-3038-4abc-8104-f1ec33cf9bc2/teams/4df62211-0442-4b96-939d-017e5317236e",
+            "users": [
+              {
+                "id": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
               },
             ],
           },
@@ -122,163 +262,408 @@ Object {
       "_type": "azure_devops_team",
       "createdOn": undefined,
       "description": "The default project team.",
-      "displayName": "Project One Team",
-      "id": "db0744c6-a6b2-46d5-a99d-b1a5152d7d9f",
-      "identityUrl": "https://spsprodcus5.vssps.visualstudio.com/Ae6472b42-435c-4da8-bb39-ae8a56ec4bbd/_apis/Identities/db0744c6-a6b2-46d5-a99d-b1a5152d7d9f",
-      "name": "Project One Team",
-      "projectId": "ec28b48e-62ee-443e-83a2-27e591f5c30a",
-      "projectName": "Project One",
-      "webLink": "https://dev.azure.com/michaelknoedel/_apis/projects/ec28b48e-62ee-443e-83a2-27e591f5c30a/teams/db0744c6-a6b2-46d5-a99d-b1a5152d7d9f",
+      "displayName": "Test_Project Team",
+      "id": "4df62211-0442-4b96-939d-017e5317236e",
+      "identityUrl": "https://spsprodcin2.vssps.visualstudio.com/A84189b9e-dd50-48a6-83a4-7ac8273359da/_apis/Identities/4df62211-0442-4b96-939d-017e5317236e",
+      "name": "Test_Project Team",
+      "projectId": "45aa0afe-3038-4abc-8104-f1ec33cf9bc2",
+      "projectName": "Test_Project",
+      "webLink": "https://dev.azure.com/default/_apis/projects/45aa0afe-3038-4abc-8104-f1ec33cf9bc2/teams/4df62211-0442-4b96-939d-017e5317236e",
     },
-    Object {
-      "_class": Array [
+    {
+      "_class": [
+        "UserGroup",
+      ],
+      "_key": "1b527620-5416-4c4f-99fb-a0c280971b10",
+      "_rawData": [
+        {
+          "name": "default",
+          "rawData": {
+            "description": "The default project team.",
+            "id": "1b527620-5416-4c4f-99fb-a0c280971b10",
+            "identityUrl": "https://spsprodcin2.vssps.visualstudio.com/A84189b9e-dd50-48a6-83a4-7ac8273359da/_apis/Identities/1b527620-5416-4c4f-99fb-a0c280971b10",
+            "name": "TestProjectByMetron Team",
+            "projectId": "c9c4d8a4-01db-49b3-ae2d-97db0aa76fce",
+            "projectName": "TestProjectByMetron",
+            "url": "https://dev.azure.com/default/_apis/projects/c9c4d8a4-01db-49b3-ae2d-97db0aa76fce/teams/1b527620-5416-4c4f-99fb-a0c280971b10",
+            "users": [
+              {
+                "id": "cf832e05-0302-649d-871e-b323227d6484",
+              },
+              {
+                "id": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+              },
+            ],
+          },
+        },
+      ],
+      "_type": "azure_devops_team",
+      "createdOn": undefined,
+      "description": "The default project team.",
+      "displayName": "TestProjectByMetron Team",
+      "id": "1b527620-5416-4c4f-99fb-a0c280971b10",
+      "identityUrl": "https://spsprodcin2.vssps.visualstudio.com/A84189b9e-dd50-48a6-83a4-7ac8273359da/_apis/Identities/1b527620-5416-4c4f-99fb-a0c280971b10",
+      "name": "TestProjectByMetron Team",
+      "projectId": "c9c4d8a4-01db-49b3-ae2d-97db0aa76fce",
+      "projectName": "TestProjectByMetron",
+      "webLink": "https://dev.azure.com/default/_apis/projects/c9c4d8a4-01db-49b3-ae2d-97db0aa76fce/teams/1b527620-5416-4c4f-99fb-a0c280971b10",
+    },
+    {
+      "_class": [
+        "UserGroup",
+      ],
+      "_key": "520c3c4a-cfe9-490f-a597-10c25413fe3c",
+      "_rawData": [
+        {
+          "name": "default",
+          "rawData": {
+            "description": "The default project team.",
+            "id": "520c3c4a-cfe9-490f-a597-10c25413fe3c",
+            "identityUrl": "https://spsprodcin2.vssps.visualstudio.com/A84189b9e-dd50-48a6-83a4-7ac8273359da/_apis/Identities/520c3c4a-cfe9-490f-a597-10c25413fe3c",
+            "name": "testProject2 Team",
+            "projectId": "e193f7df-a2c4-4fed-b7b8-0456d9732b04",
+            "projectName": "testProject2",
+            "url": "https://dev.azure.com/default/_apis/projects/e193f7df-a2c4-4fed-b7b8-0456d9732b04/teams/520c3c4a-cfe9-490f-a597-10c25413fe3c",
+            "users": [
+              {
+                "id": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+              },
+            ],
+          },
+        },
+      ],
+      "_type": "azure_devops_team",
+      "createdOn": undefined,
+      "description": "The default project team.",
+      "displayName": "testProject2 Team",
+      "id": "520c3c4a-cfe9-490f-a597-10c25413fe3c",
+      "identityUrl": "https://spsprodcin2.vssps.visualstudio.com/A84189b9e-dd50-48a6-83a4-7ac8273359da/_apis/Identities/520c3c4a-cfe9-490f-a597-10c25413fe3c",
+      "name": "testProject2 Team",
+      "projectId": "e193f7df-a2c4-4fed-b7b8-0456d9732b04",
+      "projectName": "testProject2",
+      "webLink": "https://dev.azure.com/default/_apis/projects/e193f7df-a2c4-4fed-b7b8-0456d9732b04/teams/520c3c4a-cfe9-490f-a597-10c25413fe3c",
+    },
+    {
+      "_class": [
+        "UserGroup",
+      ],
+      "_key": "c91b73de-8bd4-4bb5-9ae7-30b06867b228",
+      "_rawData": [
+        {
+          "name": "default",
+          "rawData": {
+            "description": "The default project team.",
+            "id": "c91b73de-8bd4-4bb5-9ae7-30b06867b228",
+            "identityUrl": "https://spsprodcin2.vssps.visualstudio.com/A84189b9e-dd50-48a6-83a4-7ac8273359da/_apis/Identities/c91b73de-8bd4-4bb5-9ae7-30b06867b228",
+            "name": "Project2 Team",
+            "projectId": "af58e917-ee45-445b-bfb7-7850a53fcf21",
+            "projectName": "Project2",
+            "url": "https://dev.azure.com/default/_apis/projects/af58e917-ee45-445b-bfb7-7850a53fcf21/teams/c91b73de-8bd4-4bb5-9ae7-30b06867b228",
+            "users": [
+              {
+                "id": "cf832e05-0302-649d-871e-b323227d6484",
+              },
+              {
+                "id": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+              },
+            ],
+          },
+        },
+      ],
+      "_type": "azure_devops_team",
+      "createdOn": undefined,
+      "description": "The default project team.",
+      "displayName": "Project2 Team",
+      "id": "c91b73de-8bd4-4bb5-9ae7-30b06867b228",
+      "identityUrl": "https://spsprodcin2.vssps.visualstudio.com/A84189b9e-dd50-48a6-83a4-7ac8273359da/_apis/Identities/c91b73de-8bd4-4bb5-9ae7-30b06867b228",
+      "name": "Project2 Team",
+      "projectId": "af58e917-ee45-445b-bfb7-7850a53fcf21",
+      "projectName": "Project2",
+      "webLink": "https://dev.azure.com/default/_apis/projects/af58e917-ee45-445b-bfb7-7850a53fcf21/teams/c91b73de-8bd4-4bb5-9ae7-30b06867b228",
+    },
+    {
+      "_class": [
         "Record",
       ],
-      "_key": "ec28b48e-62ee-443e-83a2-27e591f5c30a1",
-      "_rawData": Array [
-        Object {
+      "_key": "af58e917-ee45-445b-bfb7-7850a53fcf211",
+      "_rawData": [
+        {
           "name": "default",
-          "rawData": Object {
-            "fields": Object {
+          "rawData": {
+            "fields": {
               "Microsoft.VSTS.Common.Priority": 2,
-              "Microsoft.VSTS.Common.StateChangeDate": "2021-03-22T17:59:24.453Z",
-              "System.AreaId": 4,
-              "System.AreaLevel1": "Project One",
-              "System.AreaPath": "Project One",
-              "System.AssignedTo": "Michael Knoedel <michael.knoedel@jupiterone.com>",
+              "Microsoft.VSTS.Common.StateChangeDate": "2024-03-14T14:35:53.323Z",
+              "System.AreaId": 8,
+              "System.AreaLevel1": "Project2",
+              "System.AreaPath": "Project2",
+              "System.AssignedTo": "metron <metron@j1AzureIntegrationDev.onmicrosoft.com>",
               "System.AttachedFileCount": 0,
-              "System.AuthorizedAs": "Michael Knoedel <michael.knoedel@jupiterone.com>",
-              "System.AuthorizedDate": "2021-03-22T17:59:37.637Z",
-              "System.BoardColumn": "To Do",
-              "System.BoardColumnDone": false,
-              "System.ChangedBy": "Michael Knoedel <michael.knoedel@jupiterone.com>",
-              "System.ChangedDate": "2021-03-22T17:59:37.637Z",
+              "System.AuthorizedAs": "metron <metron@j1AzureIntegrationDev.onmicrosoft.com>",
+              "System.AuthorizedDate": "2024-03-14T15:20:53.2Z",
+              "System.ChangedBy": "metron <metron@j1AzureIntegrationDev.onmicrosoft.com>",
+              "System.ChangedDate": "2024-03-14T15:20:53.2Z",
               "System.CommentCount": 0,
-              "System.CreatedBy": "Michael Knoedel <michael.knoedel@jupiterone.com>",
-              "System.CreatedDate": "2021-03-22T17:59:24.453Z",
+              "System.CreatedBy": "metron <metron@j1AzureIntegrationDev.onmicrosoft.com>",
+              "System.CreatedDate": "2024-03-14T14:35:53.323Z",
               "System.ExternalLinkCount": 0,
               "System.HyperLinkCount": 0,
               "System.Id": 1,
-              "System.IterationId": 3,
-              "System.IterationLevel1": "Project One",
-              "System.IterationLevel2": "Sprint 1",
-              "System.IterationPath": "Project One\\\\Sprint 1",
-              "System.NodeName": "Project One",
-              "System.PersonId": 226500438,
+              "System.IterationId": 5,
+              "System.IterationLevel1": "Project2",
+              "System.IterationPath": "Project2",
+              "System.NodeName": "Project2",
+              "System.PersonId": 246753397,
               "System.Reason": "Added to backlog",
               "System.RelatedLinkCount": 0,
               "System.RemoteLinkCount": 0,
               "System.Rev": 2,
               "System.RevisedDate": "9999-01-01T00:00:00Z",
               "System.State": "To Do",
-              "System.TeamProject": "Project One",
-              "System.Title": "Item 1",
+              "System.TeamProject": "Project2",
+              "System.Title": "test workitem",
               "System.Watermark": 2,
-              "System.WorkItemType": "Issue",
+              "System.WorkItemType": "Epic",
             },
             "id": 1,
-            "projectId": "ec28b48e-62ee-443e-83a2-27e591f5c30a",
+            "projectId": "af58e917-ee45-445b-bfb7-7850a53fcf21",
             "rev": 2,
           },
         },
       ],
       "_type": "azure_devops_work_item",
-      "areaPath": "Project One",
-      "changedBy": "Michael Knoedel <michael.knoedel@jupiterone.com>",
-      "changedDate": "2021-03-22T17:59:37.637Z",
+      "areaPath": "Project2",
+      "changedBy": "metron <metron@j1AzureIntegrationDev.onmicrosoft.com>",
+      "changedDate": "2024-03-14T15:20:53.2Z",
       "commentCount": 0,
-      "createdDate": "2021-03-22T17:59:24.453Z",
+      "createdDate": "2024-03-14T14:35:53.323Z",
       "createdOn": undefined,
       "description": undefined,
-      "displayName": "Item 1",
+      "displayName": "test workitem",
       "history": undefined,
-      "interationPath": "Project One\\\\Sprint 1",
-      "name": "Item 1",
+      "interationPath": "Project2",
+      "name": "test workitem",
       "priority": 2,
-      "projectId": "ec28b48e-62ee-443e-83a2-27e591f5c30a",
-      "projectName": "Project One",
+      "projectId": "af58e917-ee45-445b-bfb7-7850a53fcf21",
+      "projectName": "Project2",
       "reason": "Added to backlog",
       "revision": 2,
       "state": "To Do",
-      "stateChangeDate": "2021-03-22T17:59:24.453Z",
-      "teamProject": "Project One",
-      "type": "Issue",
+      "stateChangeDate": "2024-03-14T14:35:53.323Z",
+      "teamProject": "Project2",
+      "type": "Epic",
       "webLink": undefined,
-      "workItemType": "Issue",
+      "workItemType": "Epic",
     },
   ],
-  "collectedRelationships": Array [
-    Object {
+  "collectedRelationships": [
+    {
       "_class": "HAS",
       "_fromEntityKey": "azure-devops-account:local-integration-instance",
-      "_key": "azure-devops-account:local-integration-instance|has|ec28b48e-62ee-443e-83a2-27e591f5c30a",
-      "_toEntityKey": "ec28b48e-62ee-443e-83a2-27e591f5c30a",
+      "_key": "azure-devops-account:local-integration-instance|has|45aa0afe-3038-4abc-8104-f1ec33cf9bc2",
+      "_toEntityKey": "45aa0afe-3038-4abc-8104-f1ec33cf9bc2",
       "_type": "azure_devops_account_has_project",
       "displayName": "HAS",
     },
-    Object {
+    {
       "_class": "HAS",
       "_fromEntityKey": "azure-devops-account:local-integration-instance",
-      "_key": "azure-devops-account:local-integration-instance|has|e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
-      "_toEntityKey": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
+      "_key": "azure-devops-account:local-integration-instance|has|c9c4d8a4-01db-49b3-ae2d-97db0aa76fce",
+      "_toEntityKey": "c9c4d8a4-01db-49b3-ae2d-97db0aa76fce",
+      "_type": "azure_devops_account_has_project",
+      "displayName": "HAS",
+    },
+    {
+      "_class": "HAS",
+      "_fromEntityKey": "azure-devops-account:local-integration-instance",
+      "_key": "azure-devops-account:local-integration-instance|has|af58e917-ee45-445b-bfb7-7850a53fcf21",
+      "_toEntityKey": "af58e917-ee45-445b-bfb7-7850a53fcf21",
+      "_type": "azure_devops_account_has_project",
+      "displayName": "HAS",
+    },
+    {
+      "_class": "HAS",
+      "_fromEntityKey": "azure-devops-account:local-integration-instance",
+      "_key": "azure-devops-account:local-integration-instance|has|e193f7df-a2c4-4fed-b7b8-0456d9732b04",
+      "_toEntityKey": "e193f7df-a2c4-4fed-b7b8-0456d9732b04",
+      "_type": "azure_devops_account_has_project",
+      "displayName": "HAS",
+    },
+    {
+      "_class": "HAS",
+      "_fromEntityKey": "azure-devops-account:local-integration-instance",
+      "_key": "azure-devops-account:local-integration-instance|has|a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+      "_toEntityKey": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
       "_type": "azure_devops_account_has_user",
       "displayName": "HAS",
     },
-    Object {
+    {
+      "_class": "MANAGES",
+      "_fromEntityKey": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+      "_key": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc|manages|azure-devops-account:local-integration-instance",
+      "_toEntityKey": "azure-devops-account:local-integration-instance",
+      "_type": "azure_devops_user_manages_account",
+      "displayName": "MANAGES",
+    },
+    {
       "_class": "HAS",
       "_fromEntityKey": "azure-devops-account:local-integration-instance",
-      "_key": "azure-devops-account:local-integration-instance|has|db0744c6-a6b2-46d5-a99d-b1a5152d7d9f",
-      "_toEntityKey": "db0744c6-a6b2-46d5-a99d-b1a5152d7d9f",
+      "_key": "azure-devops-account:local-integration-instance|has|cf832e05-0302-649d-871e-b323227d6484",
+      "_toEntityKey": "cf832e05-0302-649d-871e-b323227d6484",
+      "_type": "azure_devops_account_has_user",
+      "displayName": "HAS",
+    },
+    {
+      "_class": "MANAGES",
+      "_fromEntityKey": "cf832e05-0302-649d-871e-b323227d6484",
+      "_key": "cf832e05-0302-649d-871e-b323227d6484|manages|azure-devops-account:local-integration-instance",
+      "_toEntityKey": "azure-devops-account:local-integration-instance",
+      "_type": "azure_devops_user_manages_account",
+      "displayName": "MANAGES",
+    },
+    {
+      "_class": "HAS",
+      "_fromEntityKey": "azure-devops-account:local-integration-instance",
+      "_key": "azure-devops-account:local-integration-instance|has|4df62211-0442-4b96-939d-017e5317236e",
+      "_toEntityKey": "4df62211-0442-4b96-939d-017e5317236e",
       "_type": "azure_devops_account_has_team",
       "displayName": "HAS",
     },
-    Object {
+    {
       "_class": "HAS",
-      "_fromEntityKey": "db0744c6-a6b2-46d5-a99d-b1a5152d7d9f",
-      "_key": "db0744c6-a6b2-46d5-a99d-b1a5152d7d9f|has|e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
-      "_toEntityKey": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
+      "_fromEntityKey": "4df62211-0442-4b96-939d-017e5317236e",
+      "_key": "4df62211-0442-4b96-939d-017e5317236e|has|a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+      "_toEntityKey": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
       "_type": "azure_devops_team_has_user",
       "displayName": "HAS",
     },
-    Object {
+    {
       "_class": "HAS",
-      "_fromEntityKey": "ec28b48e-62ee-443e-83a2-27e591f5c30a",
-      "_key": "ec28b48e-62ee-443e-83a2-27e591f5c30a|has|db0744c6-a6b2-46d5-a99d-b1a5152d7d9f",
-      "_toEntityKey": "db0744c6-a6b2-46d5-a99d-b1a5152d7d9f",
+      "_fromEntityKey": "45aa0afe-3038-4abc-8104-f1ec33cf9bc2",
+      "_key": "45aa0afe-3038-4abc-8104-f1ec33cf9bc2|has|4df62211-0442-4b96-939d-017e5317236e",
+      "_toEntityKey": "4df62211-0442-4b96-939d-017e5317236e",
       "_type": "azure_devops_project_has_team",
       "displayName": "HAS",
     },
-    Object {
+    {
+      "_class": "HAS",
+      "_fromEntityKey": "azure-devops-account:local-integration-instance",
+      "_key": "azure-devops-account:local-integration-instance|has|1b527620-5416-4c4f-99fb-a0c280971b10",
+      "_toEntityKey": "1b527620-5416-4c4f-99fb-a0c280971b10",
+      "_type": "azure_devops_account_has_team",
+      "displayName": "HAS",
+    },
+    {
+      "_class": "HAS",
+      "_fromEntityKey": "1b527620-5416-4c4f-99fb-a0c280971b10",
+      "_key": "1b527620-5416-4c4f-99fb-a0c280971b10|has|cf832e05-0302-649d-871e-b323227d6484",
+      "_toEntityKey": "cf832e05-0302-649d-871e-b323227d6484",
+      "_type": "azure_devops_team_has_user",
+      "displayName": "HAS",
+    },
+    {
+      "_class": "HAS",
+      "_fromEntityKey": "1b527620-5416-4c4f-99fb-a0c280971b10",
+      "_key": "1b527620-5416-4c4f-99fb-a0c280971b10|has|a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+      "_toEntityKey": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+      "_type": "azure_devops_team_has_user",
+      "displayName": "HAS",
+    },
+    {
+      "_class": "HAS",
+      "_fromEntityKey": "c9c4d8a4-01db-49b3-ae2d-97db0aa76fce",
+      "_key": "c9c4d8a4-01db-49b3-ae2d-97db0aa76fce|has|1b527620-5416-4c4f-99fb-a0c280971b10",
+      "_toEntityKey": "1b527620-5416-4c4f-99fb-a0c280971b10",
+      "_type": "azure_devops_project_has_team",
+      "displayName": "HAS",
+    },
+    {
+      "_class": "HAS",
+      "_fromEntityKey": "azure-devops-account:local-integration-instance",
+      "_key": "azure-devops-account:local-integration-instance|has|520c3c4a-cfe9-490f-a597-10c25413fe3c",
+      "_toEntityKey": "520c3c4a-cfe9-490f-a597-10c25413fe3c",
+      "_type": "azure_devops_account_has_team",
+      "displayName": "HAS",
+    },
+    {
+      "_class": "HAS",
+      "_fromEntityKey": "520c3c4a-cfe9-490f-a597-10c25413fe3c",
+      "_key": "520c3c4a-cfe9-490f-a597-10c25413fe3c|has|a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+      "_toEntityKey": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+      "_type": "azure_devops_team_has_user",
+      "displayName": "HAS",
+    },
+    {
+      "_class": "HAS",
+      "_fromEntityKey": "e193f7df-a2c4-4fed-b7b8-0456d9732b04",
+      "_key": "e193f7df-a2c4-4fed-b7b8-0456d9732b04|has|520c3c4a-cfe9-490f-a597-10c25413fe3c",
+      "_toEntityKey": "520c3c4a-cfe9-490f-a597-10c25413fe3c",
+      "_type": "azure_devops_project_has_team",
+      "displayName": "HAS",
+    },
+    {
+      "_class": "HAS",
+      "_fromEntityKey": "azure-devops-account:local-integration-instance",
+      "_key": "azure-devops-account:local-integration-instance|has|c91b73de-8bd4-4bb5-9ae7-30b06867b228",
+      "_toEntityKey": "c91b73de-8bd4-4bb5-9ae7-30b06867b228",
+      "_type": "azure_devops_account_has_team",
+      "displayName": "HAS",
+    },
+    {
+      "_class": "HAS",
+      "_fromEntityKey": "c91b73de-8bd4-4bb5-9ae7-30b06867b228",
+      "_key": "c91b73de-8bd4-4bb5-9ae7-30b06867b228|has|cf832e05-0302-649d-871e-b323227d6484",
+      "_toEntityKey": "cf832e05-0302-649d-871e-b323227d6484",
+      "_type": "azure_devops_team_has_user",
+      "displayName": "HAS",
+    },
+    {
+      "_class": "HAS",
+      "_fromEntityKey": "c91b73de-8bd4-4bb5-9ae7-30b06867b228",
+      "_key": "c91b73de-8bd4-4bb5-9ae7-30b06867b228|has|a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+      "_toEntityKey": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+      "_type": "azure_devops_team_has_user",
+      "displayName": "HAS",
+    },
+    {
+      "_class": "HAS",
+      "_fromEntityKey": "af58e917-ee45-445b-bfb7-7850a53fcf21",
+      "_key": "af58e917-ee45-445b-bfb7-7850a53fcf21|has|c91b73de-8bd4-4bb5-9ae7-30b06867b228",
+      "_toEntityKey": "c91b73de-8bd4-4bb5-9ae7-30b06867b228",
+      "_type": "azure_devops_project_has_team",
+      "displayName": "HAS",
+    },
+    {
       "_class": "CREATED",
-      "_fromEntityKey": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
-      "_key": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424|created|ec28b48e-62ee-443e-83a2-27e591f5c30a1",
-      "_toEntityKey": "ec28b48e-62ee-443e-83a2-27e591f5c30a1",
+      "_fromEntityKey": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+      "_key": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc|created|af58e917-ee45-445b-bfb7-7850a53fcf211",
+      "_toEntityKey": "af58e917-ee45-445b-bfb7-7850a53fcf211",
       "_type": "azure_devops_user_created_work_item",
       "displayName": "CREATED",
     },
-    Object {
+    {
       "_class": "ASSIGNED",
-      "_fromEntityKey": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424",
-      "_key": "e7f84ec3-0ecc-4b78-878b-42a5c2c8f424|assigned|ec28b48e-62ee-443e-83a2-27e591f5c30a1",
-      "_toEntityKey": "ec28b48e-62ee-443e-83a2-27e591f5c30a1",
+      "_fromEntityKey": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc",
+      "_key": "a487aae2-d50b-6c04-90e1-e20dcc3dc9cc|assigned|af58e917-ee45-445b-bfb7-7850a53fcf211",
+      "_toEntityKey": "af58e917-ee45-445b-bfb7-7850a53fcf211",
       "_type": "azure_devops_user_assigned_work_item",
       "displayName": "ASSIGNED",
     },
-    Object {
+    {
       "_class": "HAS",
-      "_fromEntityKey": "ec28b48e-62ee-443e-83a2-27e591f5c30a",
-      "_key": "ec28b48e-62ee-443e-83a2-27e591f5c30a|has|ec28b48e-62ee-443e-83a2-27e591f5c30a1",
-      "_toEntityKey": "ec28b48e-62ee-443e-83a2-27e591f5c30a1",
+      "_fromEntityKey": "af58e917-ee45-445b-bfb7-7850a53fcf21",
+      "_key": "af58e917-ee45-445b-bfb7-7850a53fcf21|has|af58e917-ee45-445b-bfb7-7850a53fcf211",
+      "_toEntityKey": "af58e917-ee45-445b-bfb7-7850a53fcf211",
       "_type": "azure_devops_project_has_work_item",
       "displayName": "HAS",
     },
   ],
-  "encounteredTypes": Array [
+  "encounteredTypes": [
     "azure_devops_account",
     "azure_devops_project",
     "azure_devops_account_has_project",
     "azure_devops_user",
     "azure_devops_account_has_user",
+    "azure_devops_user_manages_account",
     "azure_devops_team",
     "azure_devops_account_has_team",
     "azure_devops_team_has_user",
@@ -288,7 +673,7 @@ Object {
     "azure_devops_user_assigned_work_item",
     "azure_devops_project_has_work_item",
   ],
-  "numCollectedEntities": 5,
-  "numCollectedRelationships": 8,
+  "numCollectedEntities": 12,
+  "numCollectedRelationships": 25,
 }
 `;
