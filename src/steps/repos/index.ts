@@ -20,6 +20,7 @@ import {
   MappedRelationships,
 } from '../constant';
 import { getAccountKey } from '../account';
+import { INGESTION_SOURCE_IDS } from '../../constants';
 
 const DOMAINS = {
   Bitbucket: 'https://bitbucket.org/',
@@ -147,6 +148,7 @@ export const repositorySteps: IntegrationStep<ADOIntegrationConfig>[] = [
     ],
     dependsOn: [Steps.FETCH_PROJECTS],
     executionHandler: fetchRepositories,
+    ingestionSourceId: INGESTION_SOURCE_IDS.REPOS,
   },
   {
     id: Steps.BUILD_ACCOUNT_REPO_RELATIONSHIP,
@@ -155,5 +157,6 @@ export const repositorySteps: IntegrationStep<ADOIntegrationConfig>[] = [
     relationships: [Relationships.ACCOUNT_OWNS_REPO],
     dependsOn: [Steps.FETCH_ACCOUNT, Steps.FETCH_REPOSITORY],
     executionHandler: buildAccountRepoRelationship,
+    ingestionSourceId: INGESTION_SOURCE_IDS.REPOS,
   },
 ];

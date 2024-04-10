@@ -14,6 +14,7 @@ import { createAPIClient } from '../../client';
 import { ADOIntegrationConfig } from '../../types';
 import { EnvironmentInstance } from 'azure-devops-node-api/interfaces/TaskAgentInterfaces';
 import { Entities, Relationships, Steps } from '../constant';
+import { INGESTION_SOURCE_IDS } from '../../constants';
 
 function getEnvironmentKey(environmentId): string {
   return `${Entities.ENVIRONMENT_ENTITY._type}:${environmentId}`;
@@ -102,6 +103,7 @@ export const environmentSteps: IntegrationStep<ADOIntegrationConfig>[] = [
     relationships: [],
     dependsOn: [Steps.FETCH_PROJECTS],
     executionHandler: fetchEnvironment,
+    ingestionSourceId: INGESTION_SOURCE_IDS.ENVIRONMENTS,
   },
   {
     id: Steps.BUILD_PROJECT_ENVIRONMENT_RELATIONSHIP,
@@ -110,5 +112,6 @@ export const environmentSteps: IntegrationStep<ADOIntegrationConfig>[] = [
     relationships: [Relationships.PROJECT_HAS_ENVIRONMENT],
     dependsOn: [Steps.FETCH_PROJECTS, Steps.FETCH_ENVIRONMENTS],
     executionHandler: buildProjectEnvironmentRelationship,
+    ingestionSourceId: INGESTION_SOURCE_IDS.ENVIRONMENTS,
   },
 ];

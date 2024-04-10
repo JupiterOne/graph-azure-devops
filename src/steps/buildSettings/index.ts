@@ -13,6 +13,7 @@ import { createAPIClient } from '../../client';
 import { ADOIntegrationConfig } from '../../types';
 import { PipelineGeneralSettings } from 'azure-devops-node-api/interfaces/BuildInterfaces';
 import { Entities, Relationships, Steps } from '../constant';
+import { INGESTION_SOURCE_IDS } from '../../constants';
 
 function getBuildGeneralSettingKey(projectId): string {
   return `${Entities.BUILD_SETTING_ENTITY._type}:${projectId}`;
@@ -95,6 +96,7 @@ export const buildSettingSteps: IntegrationStep<ADOIntegrationConfig>[] = [
     relationships: [],
     dependsOn: [Steps.FETCH_PROJECTS],
     executionHandler: fetchBuildSettings,
+    ingestionSourceId: INGESTION_SOURCE_IDS.BUILD,
   },
   {
     id: Steps.BUILD_PROJECT_BUILD_SETTING_RELATIONSHIP,
@@ -103,5 +105,6 @@ export const buildSettingSteps: IntegrationStep<ADOIntegrationConfig>[] = [
     relationships: [Relationships.PROJECT_HAS_BUILD_SETTINGS],
     dependsOn: [Steps.FETCH_PROJECTS, Steps.FETCH_BUILD_SETTINGS],
     executionHandler: buildProjectBuildSettingsRelationship,
+    ingestionSourceId: INGESTION_SOURCE_IDS.BUILD,
   },
 ];

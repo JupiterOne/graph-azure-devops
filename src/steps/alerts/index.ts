@@ -22,6 +22,7 @@ import {
   AlertType,
 } from 'azure-devops-node-api/interfaces/AlertInterfaces';
 import { getRepoKey } from '../repos';
+import { INGESTION_SOURCE_IDS } from '../../constants';
 
 function getAlertsKey(alertID) {
   return `${Entities.ALERT_ENTITY._type}:${alertID}`;
@@ -56,7 +57,9 @@ export async function fetchAlerts({
   logger,
 }: IntegrationStepExecutionContext<ADOIntegrationConfig>) {
   const apiClient = createAPIClient(instance.config);
-
+  const allowedSeverities = instance.config.alertSeverities
+    ? instance.config.alertSeverities.split(',')
+    : [];
   await jobState.iterateEntities(
     { _type: Entities.REPOSITORY_ENTITY._type },
     async (repositoryEntity) => {
@@ -73,6 +76,15 @@ export async function fetchAlerts({
         repoId,
         logger,
         async (alert) => {
+          if (
+            !allowedSeverities.includes(
+              alert.severity
+                ? AlertSeverity[alert.severity].toLocaleUpperCase()
+                : 'UNKNOWN',
+            )
+          ) {
+            return;
+          }
           await jobState.addEntity(createAlertEntity(alert, repoId));
         },
       );
@@ -115,6 +127,7 @@ export const alertSteps: IntegrationStep<ADOIntegrationConfig>[] = [
     relationships: [],
     dependsOn: [Steps.FETCH_REPOSITORY],
     executionHandler: fetchAlerts,
+    ingestionSourceId: INGESTION_SOURCE_IDS.ALERTS,
   },
   {
     id: Steps.BUILD_REPO_ALERT_RELATIONSHIP,
@@ -123,5 +136,6 @@ export const alertSteps: IntegrationStep<ADOIntegrationConfig>[] = [
     relationships: [Relationships.REPO_HAS_ALERTS],
     dependsOn: [Steps.FETCH_REPOSITORY, Steps.FETCH_ALERTS],
     executionHandler: buildRepoAlertRelationship,
+    ingestionSourceId: INGESTION_SOURCE_IDS.ALERTS,
   },
 ];

@@ -14,6 +14,7 @@ import { createAPIClient } from '../../client';
 import { ADOIntegrationConfig } from '../../types';
 import { BuildDefinitionReference } from 'azure-devops-node-api/interfaces/BuildInterfaces';
 import { Entities, Relationships, Steps } from '../constant';
+import { INGESTION_SOURCE_IDS } from '../../constants';
 
 function getPipelineKey(pipelineId): string {
   return `${Entities.PIPELINE_ENTITY._type}:${pipelineId}`;
@@ -96,6 +97,7 @@ export const pipelineSteps: IntegrationStep<ADOIntegrationConfig>[] = [
     relationships: [],
     dependsOn: [Steps.FETCH_PROJECTS],
     executionHandler: fetchPipeline,
+    ingestionSourceId: INGESTION_SOURCE_IDS.PIPELINES,
   },
   {
     id: Steps.BUILD_PROJECT_PIPELINE_RELATIONSHIP,
@@ -104,5 +106,6 @@ export const pipelineSteps: IntegrationStep<ADOIntegrationConfig>[] = [
     relationships: [Relationships.AZURE_DEVOPS_PROJECT_HAS_PIPELINE],
     dependsOn: [Steps.FETCH_PROJECTS, Steps.FETCH_PIPELINE],
     executionHandler: buildProjectPipelineRelationship,
+    ingestionSourceId: INGESTION_SOURCE_IDS.PIPELINES,
   },
 ];

@@ -12,6 +12,7 @@ import { createAPIClient } from '../../client';
 import { ADOIntegrationConfig } from '../../types';
 import { UNIQUE_NAME_TO_USER_ID_MAPPING_PREFIX } from '../users';
 import { Steps } from '../constant';
+import { INGESTION_SOURCE_IDS } from '../../constants';
 
 function extractEmail(
   lifecycleIdentifier: string | undefined,
@@ -171,5 +172,6 @@ export const workitemSteps: IntegrationStep<ADOIntegrationConfig>[] = [
     ],
     dependsOn: [Steps.FETCH_PROJECTS, 'fetch-users'],
     executionHandler: fetchWorkItems,
+    ingestionSourceId: INGESTION_SOURCE_IDS.WORK_ITEMS,
   },
 ];

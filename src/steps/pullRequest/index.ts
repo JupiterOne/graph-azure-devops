@@ -16,6 +16,7 @@ import {
 import { Entities, Relationships, Steps } from '../constant';
 import { getRepoKey } from '../repos';
 import { getUserKey } from '../users';
+import { INGESTION_SOURCE_IDS } from '../../constants';
 
 function getPullRequestKey(pullRequestId) {
   return `${Entities.PULL_REQUEST_ENTITY._type}:${pullRequestId}`;
@@ -215,6 +216,7 @@ export const pullRequestStep: IntegrationStep<ADOIntegrationConfig>[] = [
     relationships: [],
     dependsOn: [Steps.FETCH_REPOSITORY],
     executionHandler: fetchRepositories,
+    ingestionSourceId: INGESTION_SOURCE_IDS.PULL_REQUESTS,
   },
   {
     id: Steps.BUILD_REPO_PR_RELATIONSHIP,
@@ -223,6 +225,7 @@ export const pullRequestStep: IntegrationStep<ADOIntegrationConfig>[] = [
     relationships: [Relationships.REPO_HAS_PULL_REQUEST],
     dependsOn: [Steps.FETCH_REPOSITORY, Steps.FETCH_PULL_REQUEST],
     executionHandler: buildRepoPRRelationship,
+    ingestionSourceId: INGESTION_SOURCE_IDS.PULL_REQUESTS,
   },
   {
     id: Steps.BUILD_USER_OPENED_PR_RELATIONSHIP,
@@ -231,6 +234,7 @@ export const pullRequestStep: IntegrationStep<ADOIntegrationConfig>[] = [
     relationships: [Relationships.USER_OPENED_PR],
     dependsOn: [Steps.FETCH_USERS, Steps.FETCH_PULL_REQUEST],
     executionHandler: buildUserOpenedPRRelationship,
+    ingestionSourceId: INGESTION_SOURCE_IDS.PULL_REQUESTS,
   },
   {
     id: Steps.BUILD_USER_REVIEWED_PR_RELATIONSHIP,
@@ -239,6 +243,7 @@ export const pullRequestStep: IntegrationStep<ADOIntegrationConfig>[] = [
     relationships: [Relationships.USER_REVIEWED_PR],
     dependsOn: [Steps.FETCH_USERS, Steps.FETCH_PULL_REQUEST],
     executionHandler: buildUserReviewedPRRelationship,
+    ingestionSourceId: INGESTION_SOURCE_IDS.PULL_REQUESTS,
   },
   {
     id: Steps.BUILD_USER_APPROVED_PR_RELATIONSHIP,
@@ -247,5 +252,6 @@ export const pullRequestStep: IntegrationStep<ADOIntegrationConfig>[] = [
     relationships: [Relationships.USER_APPROVED_PR],
     dependsOn: [Steps.FETCH_USERS, Steps.FETCH_PULL_REQUEST],
     executionHandler: buildUserApprovedPRRelationship,
+    ingestionSourceId: INGESTION_SOURCE_IDS.PULL_REQUESTS,
   },
 ];

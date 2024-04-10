@@ -10,6 +10,7 @@ import {
 import { createAPIClient } from '../../client';
 import { ADOIntegrationConfig } from '../../types';
 import { Entities, Relationships, Steps } from '../constant';
+import { INGESTION_SOURCE_IDS } from '../../constants';
 
 export const UNIQUE_NAME_TO_USER_ID_MAPPING_PREFIX = 'UserUniqueName:';
 
@@ -90,5 +91,6 @@ export const userSteps: IntegrationStep<ADOIntegrationConfig>[] = [
     ],
     dependsOn: [Steps.FETCH_ACCOUNT],
     executionHandler: fetchUsers,
+    ingestionSourceId: INGESTION_SOURCE_IDS.USERS,
   },
 ];

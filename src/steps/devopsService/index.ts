@@ -9,6 +9,7 @@ import {
 import { ADOIntegrationConfig } from '../../types';
 import { getAccountKey } from '../account';
 import { Entities, Relationships, Steps } from '../constant';
+import { INGESTION_SOURCE_IDS } from '../../constants';
 
 export function getDevopsServiceKey(uniqueId: string) {
   return `${Entities.DEVOPS_SERVICE_ENTITY._type}:${uniqueId}`;
@@ -91,6 +92,7 @@ export const devopsServiceSteps: IntegrationStep<ADOIntegrationConfig>[] = [
     relationships: [],
     dependsOn: [],
     executionHandler: createDevopsService,
+    ingestionSourceId: INGESTION_SOURCE_IDS.SERVICE,
   },
   {
     id: Steps.BUILD_SERVICE_ACCOUNT_RELATIONSHIP,
@@ -99,6 +101,7 @@ export const devopsServiceSteps: IntegrationStep<ADOIntegrationConfig>[] = [
     relationships: [Relationships.AZURE_DEVOPS_ACCOUNT_HAS_DEVOPS_SERVICE],
     dependsOn: [Steps.FETCH_SERVICE, Steps.FETCH_ACCOUNT],
     executionHandler: buildDevopsAccountServiceRelationship,
+    ingestionSourceId: INGESTION_SOURCE_IDS.SERVICE,
   },
   {
     id: 'build-devOps-service-project-relationship',
@@ -107,5 +110,6 @@ export const devopsServiceSteps: IntegrationStep<ADOIntegrationConfig>[] = [
     relationships: [Relationships.AZURE_DEVOPS_SCANS_PROJECTS],
     dependsOn: [Steps.FETCH_SERVICE, Steps.FETCH_PROJECTS],
     executionHandler: buildDevopsServiceProjectRelationship,
+    ingestionSourceId: INGESTION_SOURCE_IDS.SERVICE,
   },
 ];

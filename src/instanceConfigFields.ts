@@ -17,6 +17,9 @@ const instanceConfigFields: IntegrationInstanceConfigFieldMap = {
     type: 'string',
     mask: true,
   },
+  alertSeverities: {
+    type: 'string',
+  },
 };
 
 export default instanceConfigFields;

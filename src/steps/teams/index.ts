@@ -12,6 +12,7 @@ import { createAPIClient } from '../../client';
 import { ADOIntegrationConfig } from '../../types';
 import { Steps, Entities } from '../constant';
 import { getUserKey } from '../users';
+import { INGESTION_SOURCE_IDS } from '../../constants';
 
 export async function fetchTeams({
   instance,
@@ -121,5 +122,6 @@ export const teamSteps: IntegrationStep<ADOIntegrationConfig>[] = [
     ],
     dependsOn: ['fetch-users', Steps.FETCH_PROJECTS],
     executionHandler: fetchTeams,
+    ingestionSourceId: INGESTION_SOURCE_IDS.TEAMS,
   },
 ];

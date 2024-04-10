@@ -11,6 +11,7 @@ import {
 import { createAPIClient } from '../../client';
 import { ADOIntegrationConfig } from '../../types';
 import { Entities, Relationships, Steps } from '../constant';
+import { INGESTION_SOURCE_IDS } from '../../constants';
 
 export async function fetchProjects({
   instance,
@@ -64,5 +65,6 @@ export const projectSteps: IntegrationStep<ADOIntegrationConfig>[] = [
     relationships: [Relationships.AZURE_DEVOPS_ACCOUNT_HAS_PROJECTS],
     dependsOn: [Steps.FETCH_ACCOUNT],
     executionHandler: fetchProjects,
+    ingestionSourceId: INGESTION_SOURCE_IDS.PROJECTS,
   },
 ];

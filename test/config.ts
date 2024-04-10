@@ -18,6 +18,7 @@ export const DEFAULT_ORG_URL = 'https://dev.azure.com/' + DEFAULT_ORG_NAME;
 export const config: ADOIntegrationConfig = {
   orgUrl: process.env.ORG_URL || DEFAULT_ORG_URL,
   accessToken: process.env.ACCESS_TOKEN || 'accessToken',
+  alertSeverities: process.env.ALERT_SEVERITIES || 'CRITICAL,HIGH,MEDIUM',
 };
 
 export function buildStepTestConfigForStep(stepId: string): StepTestConfig {
