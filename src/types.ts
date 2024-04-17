@@ -16,4 +16,5 @@ export interface ADOIntegrationConfig extends IntegrationInstanceConfig {
    * Requires `Read` permissions for `Work Items` and `Project and Team`
    */
   accessToken: string;
+  alertSeverities?: string;
 }

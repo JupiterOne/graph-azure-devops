@@ -10,7 +10,8 @@ import {
 
 import { createAPIClient } from '../../client';
 import { ADOIntegrationConfig } from '../../types';
-import { AZURE_DEVOPS_ACCOUNT } from '../account';
+import { Entities, Relationships, Steps } from '../constant';
+import { INGESTION_SOURCE_IDS } from '../../constants';
 
 export async function fetchProjects({
   instance,
@@ -19,7 +20,7 @@ export async function fetchProjects({
   const apiClient = createAPIClient(instance.config);
 
   const accountEntity = (await jobState.getData(
-    AZURE_DEVOPS_ACCOUNT,
+    Entities.ACCOUNT_ENTITY._type,
   )) as Entity;
 
   await apiClient.iterateProjects(async (project) => {
@@ -28,8 +29,8 @@ export async function fetchProjects({
         entityData: {
           source: project,
           assign: {
-            _type: 'azure_devops_project',
-            _class: 'Project',
+            _type: Entities.PROJECT_ENTITY._type,
+            _class: Entities.PROJECT_ENTITY._class,
             _key: project.id as string,
             name: project.name,
             displayName: project.name,
@@ -58,24 +59,12 @@ export async function fetchProjects({
 
 export const projectSteps: IntegrationStep<ADOIntegrationConfig>[] = [
   {
-    id: 'fetch-projects',
+    id: Steps.FETCH_PROJECTS,
     name: 'Fetch Projects',
-    entities: [
-      {
-        resourceName: 'ADO Project',
-        _type: 'azure_devops_project',
-        _class: 'Project',
-      },
-    ],
-    relationships: [
-      {
-        _type: 'azure_devops_account_has_project',
-        _class: RelationshipClass.HAS,
-        sourceType: 'azure_devops_account',
-        targetType: 'azure_devops_project',
-      },
-    ],
-    dependsOn: ['fetch-account'],
+    entities: [Entities.PROJECT_ENTITY],
+    relationships: [Relationships.AZURE_DEVOPS_ACCOUNT_HAS_PROJECTS],
+    dependsOn: [Steps.FETCH_ACCOUNT],
     executionHandler: fetchProjects,
+    ingestionSourceId: INGESTION_SOURCE_IDS.PROJECTS,
   },
 ];

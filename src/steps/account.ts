@@ -5,8 +5,11 @@ import {
 } from '@jupiterone/integration-sdk-core';
 
 import { ADOIntegrationConfig } from '../types';
+import { Entities, Steps } from './constant';
 
-export const AZURE_DEVOPS_ACCOUNT = 'azure_devops_account';
+export function getAccountKey(uniqueId) {
+  return `azure-devops-account:${uniqueId}`;
+}
 
 export async function fetchAccountDetails({
   instance,
@@ -21,8 +24,8 @@ export async function fetchAccountDetails({
           name: 'Azure Devops Account',
         },
         assign: {
-          _key: `azure-devops-account:${instance.id}`,
-          _type: AZURE_DEVOPS_ACCOUNT,
+          _key: getAccountKey(instance.id),
+          _type: Entities.ACCOUNT_ENTITY._type,
           _class: 'Account',
           name,
           displayName: name,
@@ -30,20 +33,14 @@ export async function fetchAccountDetails({
       },
     }),
   );
-  await jobState.setData(AZURE_DEVOPS_ACCOUNT, accountEntity);
+  await jobState.setData(Entities.ACCOUNT_ENTITY._type, accountEntity);
 }
 
 export const accountSteps: IntegrationStep<ADOIntegrationConfig>[] = [
   {
-    id: 'fetch-account',
+    id: Steps.FETCH_ACCOUNT,
     name: 'Fetch Account Details',
-    entities: [
-      {
-        resourceName: 'Azure Devops Account',
-        _type: AZURE_DEVOPS_ACCOUNT,
-        _class: 'Account',
-      },
-    ],
+    entities: [Entities.ACCOUNT_ENTITY],
     relationships: [],
     dependsOn: [],
     executionHandler: fetchAccountDetails,

@@ -1,0 +1,57 @@
+---
+sourceId: managed:azure-devops
+integrationDefinitionId: "${integration_definition_id}"
+questions:
+
+  - id: managed-question-azure-devops-count-pr-per-repo
+    title: How many PRs raised for a particular Repo?
+    description: Returns a count of PRs for Repo.
+    queries:
+      - query: |
+          FIND azure_devops_pr 
+           THAT RELATES TO azure_devops_repo 
+           RETURN azure_devops_repo, Count(azure_devops_pr)
+    tags:
+      - azure-devops
+      - repo
+      - pr
+
+  - id: managed-question-azure-devops-alert-count-per-repo
+    title: How many alerts does each repo have?
+    description: Returns a count of alerts per repo.
+    queries:
+      - query: |
+           FIND azure_devops_alert_finding 
+            THAT RELATES TO azure_devops_repo 
+            RETURN azure_devops_repo, Count(azure_devops_alert_finding)
+    tags:
+      - azure-devops
+      - repo
+      - alert
+
+  - id: managed-question-azure-devops-pipeline-count-per-project
+    title: How many pipelines are there for project?
+    description: Returns a count of pipelines for a project.
+    queries:
+      - query: |
+          FIND azure_devops_pipeline 
+           THAT RELATES TO azure_devops_project 
+           RETURN azure_devops_project, Count(azure_devops_pipeline)
+    tags:
+      - azure-devops
+      - project
+      - pipeline
+
+  - id: managed-question-azure-devops-environment-count-per-project
+    title: How many environemts are there for project?
+    description: Returns a count of environment for a project.
+    queries:
+      - query: |
+          FIND azure_devops_environment 
+           THAT RELATES TO azure_devops_project 
+           RETURN azure_devops_project, Count(azure_devops_environment)
+    tags:
+      - azure-devops
+      - project
+      - environment
+      

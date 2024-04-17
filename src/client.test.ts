@@ -45,7 +45,7 @@ describe('APIClient', () => {
 
       const client = createAPIClient(configWithInvalidOrgUrl);
       await expect(client.verifyAuthentication()).rejects.toThrow(
-        'Provider authentication failed at https://dev.azure.com/a-very-invalid-org-url/_apis/Location: 404 Not Found',
+        /Provider authentication failed at https:\/\/dev.azure.com\/a-very-invalid-org-url\/_apis\/core: undefined Failed to find api location for area: Location id: .*?$/,
       );
     });
 
@@ -67,7 +67,7 @@ describe('APIClient', () => {
 
       const client = createAPIClient(configWithInvalidAccessToken);
       await expect(client.verifyAuthentication()).rejects.toThrow(
-        `Provider authentication failed at ${configWithInvalidAccessToken.orgUrl}/_apis/Location: 401 Failed request: (401)`,
+        `Provider authentication failed at ${configWithInvalidAccessToken.orgUrl}/_apis/core: 401 Failed request: (401)`,
       );
     });
   });
